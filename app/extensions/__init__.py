@@ -20,8 +20,3 @@ def register_extensions(app: Flask):
     cache.init_app(app)
     cors.init_app(app, origins=app.config['CORS_ORIGIN_WHITELIST'])
     migrate.init_app(app, db=None, directory=app.config['MIGRATIONS_DIR'])
-
-    if app.config['ENV'] == 'dev':
-        from flask_debugtoolbar import DebugToolbarExtension
-
-        DebugToolbarExtension(app)
