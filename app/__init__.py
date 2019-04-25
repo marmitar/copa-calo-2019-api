@@ -1,8 +1,10 @@
 from flask import Flask
 
 from app.config import ProdConfig
-from app.extensions import register_extensions
+from app.extensions import register_extensions, db, jwt
 from app.exceptions import register_errorhandlers
+
+from app.database import models
 
 
 def create_app(config=ProdConfig):
@@ -23,7 +25,12 @@ def register_blueprints(app: Flask):
 
 
 def register_shellcontext(app: Flask):
-    context = {}
+    context = {
+        'db': db,
+        'jwt': jwt,
+
+        'User': models.User,
+    }
 
     app.shell_context_processor(lambda: context)
 
