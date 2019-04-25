@@ -3,7 +3,7 @@ import datetime as dt
 
 
 class Config(object):
-    """Base configuration."""
+    """Base configuration"""
 
     SECRET_KEY = os.environ['HASH_SECRET_KEY']
     APP_DIR = os.path.abspath(os.path.dirname(__file__))
@@ -25,7 +25,7 @@ class Config(object):
 
 
 class ProdConfig(Config):
-    """Production configuration."""
+    """Production configuration"""
 
     ENV = 'prod'
     DEBUG = False
@@ -34,7 +34,7 @@ class ProdConfig(Config):
 
 
 class DevConfig(Config):
-    """Development configuration."""
+    """Development configuration"""
 
     ENV = 'dev'
     DEBUG = True
@@ -48,7 +48,7 @@ class DevConfig(Config):
 
 
 class TestConfig(Config):
-    """Test configuration."""
+    """Test configuration"""
 
     TESTING = True
     DEBUG = True

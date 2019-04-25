@@ -1,8 +1,7 @@
 from flask import Flask, jsonify
 from werkzeug.exceptions import HTTPException, default_exceptions
 
-from app.exceptions.json_exception import JSONException
-from app.exceptions.internal_error import InternalServerError
+from app.exceptions.base_exceptions import JSONException, InternalServerError
 
 
 def register_errorhandlers(app: Flask):
@@ -15,6 +14,6 @@ def adapt_exception(error):
         return error
 
     elif isinstance(error, HTTPException):
-        return JSONException.from_exception(error)
+        return JSONException(error)
 
     return InternalServerError(error)
