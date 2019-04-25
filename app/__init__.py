@@ -1,15 +1,14 @@
 from flask import Flask
 
 from app.config import ProdConfig
-from app.extensions import register_extensions, db, jwt
+from app.extensions import register_extensions
 from app.exceptions import register_errorhandlers
-
-from app.database import models
+from app.extensions.shell import register_shellcontext
 
 
 def create_app(config=ProdConfig):
     """Application factory"""
-    app = Flask(__name__.split('.')[0])
+    app = Flask(app_name())
     app.config.from_object(config)
 
     register_extensions(app)
@@ -20,19 +19,16 @@ def create_app(config=ProdConfig):
     return app
 
 
+def app_name():
+    import_name = __name__
+    import_path = import_name.split('.')
+    import_root = import_path[0]
+    return import_root
+
+
+
 def register_blueprints(app: Flask):
     pass
-
-
-def register_shellcontext(app: Flask):
-    context = {
-        'db': db,
-        'jwt': jwt,
-
-        'User': models.User,
-    }
-
-    app.shell_context_processor(lambda: context)
 
 
 def register_commands(app: Flask):

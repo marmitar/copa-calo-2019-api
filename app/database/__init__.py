@@ -1,5 +1,4 @@
 from app.extensions import db
-from sqlalchemy.orm import relationship
 
 
 Model = db.Model

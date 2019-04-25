@@ -1,6 +1,7 @@
 import datetime as dt
 
-from app.database import db, SurrogatePK, Model, Column
+from app.database import SurrogatePK, Model, Column
+from app.database.fields import String, Binary, DateTime
 from app.extensions import bcrypt
 
 from app.database.user.exceptions import InvalidPassword
@@ -9,18 +10,18 @@ from app.database.user.exceptions import InvalidPassword
 class User(Model, SurrogatePK):
     __tablename__ = 'users'
 
-    username = Column(db.String(32), unique=True, nullable=False)
-    email = Column(db.String(100), unique=True, nullable=False, index=True)
-    password_hash = Column(db.Binary(128), unique=True, nullable=False)
+    username = Column(String(32), unique=True, nullable=False)
+    email = Column(String(48), unique=True, nullable=False, index=True)
+    password_hash = Column(Binary(60), unique=True, nullable=False)
 
-    criado_em = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
-    atualizado_em = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow, onupdate=dt.datetime.utcnow)
+    created_at = Column(DateTime, nullable=False, default=dt.datetime.utcnow)
+    updated_at = Column(DateTime, nullable=False, default=dt.datetime.utcnow, onupdate=dt.datetime.utcnow)
 
     token: str = ''
 
 
     def __init__(self, username, email, password):
-        Model.__init__(self, username=username, email=email, password=password)
+       super().__init__(username=username, email=email, password=password)
 
     @property
     def password(self):
@@ -38,13 +39,13 @@ class User(Model, SurrogatePK):
         if not self.valid_password(old_password):
             raise InvalidPassword
 
-        Model.update(self, **kwargs)
+        super().update(**kwargs)
 
     def delete(self, password):
         if not self.valid_password(password):
             raise InvalidPassword
 
-        Model.delete(self)
+        super().delete()
 
     def __repr__(self):
         return f'<User {self.username}>'
