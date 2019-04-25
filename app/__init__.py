@@ -2,6 +2,7 @@ from flask import Flask
 
 from app.config import ProdConfig
 from app.extensions import register_extensions
+from app.exceptions import register_errorhandlers
 
 
 def create_app(config=ProdConfig):
@@ -18,10 +19,6 @@ def create_app(config=ProdConfig):
 
 
 def register_blueprints(app: Flask):
-    pass
-
-
-def register_errorhandlers(app: Flask):
     pass
 
 
