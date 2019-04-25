@@ -5,10 +5,17 @@ verify_ssl = true
 
 [dev-packages]
 flake8 = "*"
+flask-debugtoolbar = "*"
 
 [packages]
 Flask = "*"
 python-dotenv = "*"
+flask-bcrypt = "*"
+flask-cors = "*"
+flask-caching = "*"
+flask-migrate = "*"
+flask-debugtoolbar = "*"
+flask-jwt-extended = "*"
 
 [requires]
 python_version = "3.7"

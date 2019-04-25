@@ -1,6 +1,7 @@
 from flask import Flask
 
 from app.config import ProdConfig
+from app.extensions import register_extensions
 
 
 def create_app(config=ProdConfig):
@@ -14,10 +15,6 @@ def create_app(config=ProdConfig):
     register_shellcontext(app)
     register_commands(app)
     return app
-
-
-def register_extensions(app: Flask):
-    pass
 
 
 def register_blueprints(app: Flask):

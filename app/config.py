@@ -6,16 +6,17 @@ class Config(object):
     """Base configuration."""
 
     SECRET_KEY = os.environ['HASH_SECRET_KEY']
-    APP_DIR = os.path.abspath(os.path.dirname(__file__))  # This directory
+    APP_DIR = os.path.abspath(os.path.dirname(__file__))
     PROJECT_ROOT = os.path.abspath(os.path.join(APP_DIR, os.pardir))
+
+    MIGRATIONS_DIR = '.migrations'
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     BCRYPT_LOG_ROUNDS = 12
     CACHE_TYPE = 'simple'
 
-    JWT_AUTH_USERNAME_KEY = 'email'
-    JWT_AUTH_HEADER_PREFIX = 'Token'
-    JWT_HEADER_TYPE = 'Token'
+    JWT_TOKEN_LOCATION = ['Cookies']
+    JWT_COOKIE_CSRF_PROTECT = False
 
     CORS_ORIGIN_WHITELIST = [
         'http://0.0.0.0:8000',
