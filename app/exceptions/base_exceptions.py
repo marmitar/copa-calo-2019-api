@@ -16,6 +16,8 @@ class JSONException(HTTPException):
     description: str = None
 
     def __init__(self, http_exception: HTTPException=None, *, description=None):
+        super().__init__()
+
         if http_exception:
             self.kind = typename(http_exception)
             self.code = http_exception.code
@@ -27,8 +29,6 @@ class JSONException(HTTPException):
                 self.code = code
             if description:
                 self.description=description
-
-        HTTPException.__init__(self)
 
     def to_dict(self):
         d = {'kind': self.kind}
@@ -64,4 +64,4 @@ class InternalServerError(JSONException):
 
     def __init__(self, error=None):
         description = str(error) if error else None
-        JSONException.__init__(self, description=description)
+        super().__init__(description=description)

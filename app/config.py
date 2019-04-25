@@ -39,7 +39,7 @@ class DevConfig(Config):
     ENV = 'dev'
     DEBUG = True
 
-    DB_NAME = 'dev.db'
+    DB_NAME = '.dev.db'
     DB_PATH = os.path.join(Config.PROJECT_ROOT, DB_NAME)
     SQLALCHEMY_DATABASE_URI = f'sqlite:///{DB_PATH}'
 
