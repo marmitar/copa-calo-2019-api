@@ -17,7 +17,8 @@ class User(Model, SurrogatePK):
     created_at = Column(DateTime, nullable=False, default=dt.datetime.utcnow)
     updated_at = Column(DateTime, nullable=False, default=dt.datetime.utcnow, onupdate=dt.datetime.utcnow)
 
-    token: str = None
+    access_token: str = None
+    refresh_token: str = None
 
     # noqa: E303
     def __init__(self, username, email, password):

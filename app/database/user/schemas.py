@@ -1,5 +1,5 @@
 from marshmallow import Schema, pre_load, post_dump
-from marshmallow.fields import String, Email, DateTime
+from marshmallow.fields import String, Email, DateTime, Nested
 from marshmallow.validate import Length
 
 
@@ -9,7 +9,6 @@ class UserSchema(Schema):
 
     password = String(allow_none=False, load_only=True)
     old_password = String(allow_none=False, load_only=True)
-    token = String(allow_none=False, dump_only=True)
 
     created_at = DateTime(dump_only=True)
     updated_at = DateTime(dump_only=True)
