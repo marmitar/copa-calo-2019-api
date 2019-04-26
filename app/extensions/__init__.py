@@ -5,8 +5,8 @@ from flask_caching import Cache
 from flask_cors import CORS
 from flask_migrate import Migrate
 
-from .jwt import JWT
-from .database import Database
+from app.extensions.jwt import JWT
+from app.extensions.database import Database
 
 
 db = Database()

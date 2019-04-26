@@ -1,4 +1,4 @@
-from . import db
+from app.database import db
 
 
 String = db.String

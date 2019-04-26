@@ -5,6 +5,7 @@ verify_ssl = true
 
 [dev-packages]
 flake8 = "*"
+flask-shell-bpython = "*"
 
 [packages]
 Flask = "*"
@@ -15,6 +16,7 @@ flask-caching = "*"
 flask-migrate = "*"
 flask-jwt-extended = "*"
 marshmallow = "*"
+flask-apispec = "*"
 
 [requires]
 python_version = "3.7"

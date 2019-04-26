@@ -9,7 +9,7 @@ class UserSchema(Schema):
 
     password = String(allow_none=False, load_only=True)
     old_password = String(allow_none=False, load_only=True)
-    token = String(dump_only=True)
+    token = String(allow_none=False, dump_only=True)
 
     createdAt = DateTime(attribute='created_at', dump_only=True)
     updatedAt = DateTime(attribute='updated_at', dump_only=True)
@@ -19,8 +19,8 @@ class UserSchema(Schema):
     def dump_user(self, data):
         return {'user': data}
 
+    def handle_error(error, data):
+        pass
+
     class Meta:
         strict = True
-
-
-user_schema = UserSchema()

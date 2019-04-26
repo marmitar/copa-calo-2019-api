@@ -5,6 +5,9 @@ class Database(SQLAlchemy):
     def __init__(self):
 
         class CRUDModel(Model):
+            def __init__(_self, *args, **kwargs):
+                super().__init__(*args, **kwargs)
+
             @classmethod
             def create(cls, **kwargs):
                 instance = cls(**kwargs)

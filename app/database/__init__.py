@@ -12,5 +12,5 @@ class SurrogatePK:
     id = Column(db.Integer, primary_key=True, index=True)
 
     @classmethod
-    def get_by_id(cls, record_id):
-       return cls.query.get(int(record_id))
+    def get_by_id(cls, id):
+       return cls.query.get(int(id))

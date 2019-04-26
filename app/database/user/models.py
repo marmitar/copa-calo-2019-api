@@ -17,11 +17,14 @@ class User(Model, SurrogatePK):
     created_at = Column(DateTime, nullable=False, default=dt.datetime.utcnow)
     updated_at = Column(DateTime, nullable=False, default=dt.datetime.utcnow, onupdate=dt.datetime.utcnow)
 
-    token: str = ''
+    token: str = None
 
 
     def __init__(self, username, email, password):
-       super().__init__(username=username, email=email, password=password)
+       Model.__init__(self, username=username, email=email, password=password)
+       SurrogatePK.__init__(self)
+
+       self.save()
 
     @property
     def password(self):

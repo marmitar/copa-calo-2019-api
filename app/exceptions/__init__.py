@@ -1,7 +1,11 @@
 from flask import Flask, jsonify
 from werkzeug.exceptions import HTTPException, default_exceptions
 
-from app.exceptions.base_exceptions import JSONException, InternalServerError
+from app.exceptions.json_exception import JSONException
+from app.exceptions.server_error import InternalServerError
+from app.exceptions.missing_args import MissingArguments
+
+from app.exceptions.require_args import require_args
 
 
 def register_errorhandlers(app: Flask):

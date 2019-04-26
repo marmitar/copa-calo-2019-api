@@ -15,7 +15,7 @@ class Config(object):
     BCRYPT_LOG_ROUNDS = 12
     CACHE_TYPE = 'simple'
 
-    JWT_TOKEN_LOCATION = ['Cookies']
+    JWT_TOKEN_LOCATION = 'cookies'
     JWT_COOKIE_CSRF_PROTECT = False
 
     CORS_ORIGIN_WHITELIST = [

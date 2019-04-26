@@ -2,8 +2,7 @@
 
 from flask import helpers
 
-from app import create_app
-from app.config import DevConfig, ProdConfig
+from app import create_app, DevConfig, ProdConfig
 
 
 if helpers.get_env().startswith('dev'):

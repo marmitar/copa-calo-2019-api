@@ -15,8 +15,10 @@ class JSONException(HTTPException):
     code: int = None
     description: str = None
 
-    def __init__(self, http_exception: HTTPException=None, *, description=None):
+    def __init__(self, http_exception: HTTPException=None, *, description=None, **kwargs):
         super().__init__()
+
+        self.options = kwargs
 
         if http_exception:
             self.kind = typename(http_exception)
@@ -25,8 +27,6 @@ class JSONException(HTTPException):
 
         else:
             self.kind = typename(self)
-            if code:
-                self.code = code
             if description:
                 self.description=description
 
@@ -37,6 +37,7 @@ class JSONException(HTTPException):
         if self.description:
             d['description'] = self.description
 
+        d.update(self.options)
         return d
 
     def to_json(self):
@@ -55,13 +56,3 @@ class JSONException(HTTPException):
         if self.code:
             response.status_code = self.code
         return response
-
-
-class InternalServerError(JSONException):
-    """Base exception for any non-HTTP exceptions."""
-    code = 500
-    description = "The server encountered an internal error and was unable to complete your request."
-
-    def __init__(self, error=None):
-        description = str(error) if error else None
-        super().__init__(description=description)
