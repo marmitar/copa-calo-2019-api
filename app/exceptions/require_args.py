@@ -1,6 +1,6 @@
 import inspect
 
-from app.exceptions import MissingArguments
+from app.exceptions import MissingParameters
 
 
 def require_args(function):
@@ -21,7 +21,7 @@ def require_args(function):
         missing_kwargs = [arg for arg in missing_args if arg not in kwargs]
 
         if len(missing_kwargs) > 0:
-            raise MissingArguments(*missing_kwargs)
+            raise MissingParameters(*missing_kwargs)
 
         return function(*args, **kwargs)
 

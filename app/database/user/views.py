@@ -4,12 +4,12 @@ from sqlalchemy.exc import IntegrityError
 from flask_jwt_extended import (
     create_access_token, set_access_cookies,
     create_refresh_token, set_refresh_cookies,
-    jwt_required, jwt_optional,  jwt_refresh_token_required,
+    jwt_required, jwt_optional, jwt_refresh_token_required,
     current_user
 )
 
 from app.extensions import db
-from app.exceptions import MissingArguments, require_args
+from app.exceptions import MissingParameters, require_args
 from .models import User
 from .schemas import UserSchema
 from .exceptions import UserAlreadyRegistered, UserNotFound, InvalidPassword
@@ -39,7 +39,7 @@ def login_user(email, password, **_):
     if not user:
         raise UserNotFound
     elif not password:
-        raise MissingArguments('password')
+        raise MissingParameters('password')
     elif not user.valid_password(password):
         raise InvalidPassword
 

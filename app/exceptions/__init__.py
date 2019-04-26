@@ -3,7 +3,7 @@ from werkzeug.exceptions import HTTPException, default_exceptions
 
 from app.exceptions.json_exception import JSONException
 from app.exceptions.server_error import InternalServerError
-from app.exceptions.missing_args import MissingArguments
+from app.exceptions.parameters import MissingParameters, ParameterNotModifiable, InvalidParameter
 
 from app.exceptions.require_args import require_args
 

@@ -4,6 +4,9 @@ from app.extensions import db
 Model = db.Model
 Column = db.Column
 
+relationship = db.relationship
+backref = db.backref
+
 
 class SurrogatePK:
     """Adds a surrogate integer 'primary key' column named ``id``"""

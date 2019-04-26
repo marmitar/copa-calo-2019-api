@@ -1,10 +1,9 @@
-import datetime as dt
-
 from app.database import SurrogatePK, Model, Column
-from app.database.fields import String, Binary, DateTime
-from app.extensions import bcrypt, jwt
+from app.database.fields import String, Binary
+from app.extensions import bcrypt
+from app.exceptions import ParameterNotModifiable
 
-from app.database.user.exceptions import InvalidPassword, UserNotFound
+from .exceptions import InvalidPassword
 
 
 class User(Model, SurrogatePK):
@@ -13,9 +12,6 @@ class User(Model, SurrogatePK):
     username = Column(String(32), unique=True, nullable=False)
     email = Column(String(48), unique=True, nullable=False, index=True)
     password_hash = Column(Binary(60), unique=True, nullable=False)
-
-    created_at = Column(DateTime, nullable=False, default=dt.datetime.utcnow)
-    updated_at = Column(DateTime, nullable=False, default=dt.datetime.utcnow, onupdate=dt.datetime.utcnow)
 
     access_token: str = None
     refresh_token: str = None
@@ -43,6 +39,9 @@ class User(Model, SurrogatePK):
         if not self.valid_password(old_password):
             raise InvalidPassword
 
+        elif 'username' in kwargs:
+            raise ParameterNotModifiable('username')
+
         super().update(**kwargs)
 
     def delete(self, password):
@@ -53,16 +52,3 @@ class User(Model, SurrogatePK):
 
     def __repr__(self):
         return f'<User {self.username}>'
-
-
-@jwt.user_loader_callback_loader
-def get_user_by_id(id):
-    return User.get_by_id(id)
-
-@jwt.user_identity_loader
-def get_id_of_user(user: User):
-    return user.id
-
-@jwt.user_loader_error_loader
-def id_erro(id):
-        return UserNotFound(description='could not find any user associated with the id', id=id)

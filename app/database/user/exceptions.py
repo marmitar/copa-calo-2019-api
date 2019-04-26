@@ -1,9 +1,12 @@
-from app.exceptions import JSONException
+from app.exceptions import JSONException, InvalidParameter
 
 
-class InvalidPassword(JSONException):
+class InvalidPassword(InvalidParameter):
     code = 401
     description = 'Given password does not match user password'
+
+    def __init__(self):
+        super().__init__(parameter='password')
 
 
 class UserAlreadyRegistered(JSONException):
