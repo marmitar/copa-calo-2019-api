@@ -13,4 +13,4 @@ class SurrogatePK:
 
     @classmethod
     def get_by_id(cls, id):
-       return cls.query.get(int(id))
+        return cls.query.get(int(id))

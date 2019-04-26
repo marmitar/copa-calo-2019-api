@@ -5,6 +5,7 @@ from app.extensions import register_extensions
 from app.database.blueprints import register_blueprints
 from app.exceptions import register_errorhandlers
 from app.extensions.shell import register_shellcontext
+from app.commands import register_commands
 
 
 def create_app(config=ProdConfig):
@@ -25,8 +26,3 @@ def app_name():
     import_path = import_name.split('.')
     import_root = import_path[0]
     return import_root
-
-
-
-def register_commands(app: Flask):
-    pass

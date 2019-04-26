@@ -11,15 +11,16 @@ class UserSchema(Schema):
     old_password = String(allow_none=False, load_only=True)
     token = String(allow_none=False, dump_only=True)
 
-    createdAt = DateTime(attribute='created_at', dump_only=True)
-    updatedAt = DateTime(attribute='updated_at', dump_only=True)
+    created_at = DateTime(dump_only=True)
+    updated_at = DateTime(dump_only=True)
 
-
+    # noqa: E303
     @post_dump
     def dump_user(self, data):
         return {'user': data}
 
-    def handle_error(error, data):
+    # TODO
+    def handle_error(self, error, data):
         pass
 
     class Meta:

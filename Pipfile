@@ -6,6 +6,10 @@ verify_ssl = true
 [dev-packages]
 flake8 = "*"
 flask-shell-bpython = "*"
+click = "*"
+pep8-naming = "*"
+flake8-bugbear = "*"
+flake8-bandit = "*"
 
 [packages]
 Flask = "*"

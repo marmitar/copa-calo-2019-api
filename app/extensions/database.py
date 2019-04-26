@@ -5,7 +5,7 @@ class Database(SQLAlchemy):
     def __init__(self):
 
         class CRUDModel(Model):
-            def __init__(_self, *args, **kwargs):
+            def __init__(model_self, *args, **kwargs):  # noqa: N805
                 super().__init__(*args, **kwargs)
 
             @classmethod
@@ -14,19 +14,19 @@ class Database(SQLAlchemy):
                 instance.save()
                 return instance
 
-            def update(_self, commit=True, **kwargs):
+            def update(model_self, commit=True, **kwargs):  # noqa: N805
                 for attr, value in kwargs.items():
-                    setattr(_self, attr, value)
+                    setattr(model_self, attr, value)
                 if commit:
-                    _self.save()
+                    model_self.save()
 
-            def save(_self, commit=True):
-                self.session.add(_self)
+            def save(model_self, commit=True):  # noqa: N805
+                self.session.add(model_self)
                 if commit:
                     self.session.commit()
 
-            def delete(_self, commit=True):
-                self.session.delete(_self)
+            def delete(model_self, commit=True):  # noqa: N805
+                self.session.delete(model_self)
                 if commit:
                     self.session.commit()
 

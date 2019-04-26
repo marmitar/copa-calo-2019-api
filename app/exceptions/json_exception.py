@@ -15,7 +15,7 @@ class JSONException(HTTPException):
     code: int = None
     description: str = None
 
-    def __init__(self, http_exception: HTTPException=None, *, description=None, **kwargs):
+    def __init__(self, http_exception: HTTPException = None, *, description=None, **kwargs):
         super().__init__()
 
         self.options = kwargs
@@ -28,7 +28,7 @@ class JSONException(HTTPException):
         else:
             self.kind = typename(self)
             if description:
-                self.description=description
+                self.description = description
 
     def to_dict(self):
         d = {'kind': self.kind}

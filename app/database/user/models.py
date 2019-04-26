@@ -2,9 +2,9 @@ import datetime as dt
 
 from app.database import SurrogatePK, Model, Column
 from app.database.fields import String, Binary, DateTime
-from app.extensions import bcrypt
+from app.extensions import bcrypt, jwt
 
-from app.database.user.exceptions import InvalidPassword
+from app.database.user.exceptions import InvalidPassword, UserNotFound
 
 
 class User(Model, SurrogatePK):
@@ -19,12 +19,12 @@ class User(Model, SurrogatePK):
 
     token: str = None
 
-
+    # noqa: E303
     def __init__(self, username, email, password):
-       Model.__init__(self, username=username, email=email, password=password)
-       SurrogatePK.__init__(self)
+        Model.__init__(self, username=username, email=email, password=password)
+        SurrogatePK.__init__(self)
 
-       self.save()
+        self.save()
 
     @property
     def password(self):
@@ -52,3 +52,16 @@ class User(Model, SurrogatePK):
 
     def __repr__(self):
         return f'<User {self.username}>'
+
+
+@jwt.user_loader_callback_loader
+def get_user_by_id(id):
+    return User.get_by_id(id)
+
+@jwt.user_identity_loader
+def get_id_of_user(user: User):
+    return user.id
+
+@jwt.user_loader_error_loader
+def id_erro(id):
+        return UserNotFound(description='could not find any user associated with the id', id=id)

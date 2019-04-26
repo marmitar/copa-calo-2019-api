@@ -1,13 +1,14 @@
 from flask_jwt_extended import JWTManager
 
+from werkzeug.exceptions import Unauthorized
+from app.exceptions import JSONException
+
 
 class JWT(JWTManager):
     def __init__(self):
         super().__init__()
+        self.unauthorized_loader(JWT.unauthorized)
 
-    def set_identity(self, cls, *, id_attr, id_loader):
-        get_id_by_user = lambda user: getattr(user, id_attr)
-        get_user_by_id = lambda id: getattr(cls, id_loader)(id)
-
-        self.user_identity_loader(get_id_by_user)
-        self.user_loader_callback_loader(get_user_by_id)
+    @staticmethod
+    def unauthorized(description):
+        return JSONException(Unauthorized(description))
