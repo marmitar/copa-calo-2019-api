@@ -2,7 +2,6 @@ from app.database.schema import Schema, fields, validate
 
 
 class CollegeSchema(Schema):
-    __schema__ = 'college'
 
     name = fields.String(
         allow_none = False,

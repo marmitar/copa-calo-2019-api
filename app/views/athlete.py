@@ -60,3 +60,9 @@ def update_athlete(name=None, rg=None, extra=None, **_):
     athlete.update(extra=extra)
 
     return athlete
+
+
+@blueprint.route('/all', methods=['GET'])
+@marshal_with(AthleteSchema(many=True))
+def all_athletes(**_):
+    return Athlete.query.all()

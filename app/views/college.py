@@ -50,3 +50,9 @@ def update_college(name=None, initials=None, logo=None, **_):
     user: User = current_user
     user.college.update(name=name, initials=initials, logo=logo)
     return user.college
+
+
+@blueprint.route('/all', methods=['GET'])
+@marshal_with(CollegeSchema(many=True))
+def all_colleges(**_):
+    return College.query.all()

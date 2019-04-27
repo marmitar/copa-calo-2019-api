@@ -4,7 +4,6 @@ from app.exceptions import InvalidParameter
 
 
 class UserSchema(Schema):
-    __schema__ = 'user'
 
     username = fields.String(
         allow_none = False,

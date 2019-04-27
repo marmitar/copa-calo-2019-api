@@ -7,10 +7,6 @@ from app.exceptions import InvalidParameter
 class Schema(marshmallow.Schema):
     __schema__ = 'schema'
 
-    @post_dump
-    def dump_schema(self, data):
-        return {self.__schema__: data}
-
     def handle_error(self, error, data):
         field_error = list(error.normalized_messages().items())[0]
         field, messages = field_error

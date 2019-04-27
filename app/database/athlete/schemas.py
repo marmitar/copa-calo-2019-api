@@ -3,7 +3,6 @@ from app.database.athlete import Sex
 
 
 class AthleteSchema(Schema):
-    __schema__ = 'college'
 
     name = fields.String(
         allow_none = False,
