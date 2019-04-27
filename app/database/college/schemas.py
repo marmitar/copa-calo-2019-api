@@ -8,8 +8,7 @@ class CollegeSchema(Schema):
         allow_none = False,
         validate   = validate.Length(min=5, max=64)
     )
-    intials = fields.String(
-        required   = True,
+    initials = fields.String(
         allow_none = False,
         validate   = validate.Length(max=5)
     )

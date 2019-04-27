@@ -12,6 +12,7 @@ shell_context = {
     'cors': cors,
 
     'User': models.User,
+    'College': models.College,
 }
 
 

@@ -8,12 +8,12 @@ from flask_jwt_extended import (
     current_user
 )
 
-from app.extensions import db
+
 from app.exceptions import MissingParameters, require_args
 
 from app.database.models import User, College
 from app.database.schemas import UserSchema
-from app.exceptions.users import UserAlreadyRegistered, UserNotFound, InvalidPassword
+from app.exceptions.models import InvalidPassword, AlreadyRegistered
 
 blueprint = Blueprint('users', __name__)
 
@@ -22,14 +22,13 @@ blueprint = Blueprint('users', __name__)
 @use_kwargs(UserSchema)
 @marshal_with(UserSchema)
 @require_args
-def register_user(username, password, college_initials):
+def create_user(username, password, college_initials, **_):
     college = College.get(initials=college_initials)
 
     try:
         user = User(username, password, college)
-
-    except IntegrityError as err:
-        raise UserAlreadyRegistered(integrityError=str(err))
+    except IntegrityError:
+        raise AlreadyRegistered('user')
 
     return user
 
@@ -37,18 +36,16 @@ def register_user(username, password, college_initials):
 @blueprint.route('/auth', methods=['POST'])
 @use_kwargs(UserSchema)
 @require_args
-def login_user(username, password):
+def login_user(username, password, **_):
     user: User = User.get(username=username)
 
-    if not user:
-        raise UserNotFound
-    elif not user.valid_password(password):
+    if not user.valid_password(password):
         raise InvalidPassword
 
     user.access_token = create_access_token(user)
     user.refresh_token = create_refresh_token(user)
 
-    response = jsonify()
+    response = jsonify(UserSchema().dump(user))
 
     set_access_cookies(response, user.access_token)
     set_refresh_cookies(response, user.refresh_token)
@@ -76,29 +73,18 @@ def show_user():
 @blueprint.route('/update', methods=['POST'])
 @jwt_required
 @use_kwargs(UserSchema)
-@require_args
-def update_user(password, new_password):
+@marshal_with(UserSchema)
+def update_user(password=None, username=None, **_):
     user: User = current_user
-    user.update(password, new_password)
+    user.update(password, username)
 
-    return {}
+    return user
 
 
-@blueprint.route('/delete', methods=['DELETE'])
-@jwt_required
+@blueprint.route('/isfree', methods=['GET'])
 @use_kwargs(UserSchema)
 @require_args
-def delete_user(password):
-    user: User = current_user
-    user.delete(password)
-
-    return {}
-
-
-@blueprint.route('/free', methods=['GET'])
-@use_kwargs(UserSchema)
-@require_args
-def is_free(username):
+def is_free(username, **_):
     exists = User.check_by_key_value(username=username)
 
     return {

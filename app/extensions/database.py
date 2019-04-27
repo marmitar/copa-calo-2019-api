@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy, Model
+from app.exceptions.models import ResourceNotFound
 
 
 class Database(SQLAlchemy):
@@ -35,6 +36,9 @@ class Database(SQLAlchemy):
                 result = cls.query.filter_by(**kwargs)
                 if unique:
                     result = result.first()
+
+                if not result:
+                    raise ResourceNotFound()
 
                 return result
 

@@ -3,7 +3,7 @@ from app.database.fields import String, Binary
 from app.extensions import bcrypt
 from app.database.college import College
 
-from app.exceptions.users import InvalidPassword
+from app.exceptions.models import InvalidPassword
 
 
 class User(Model, SurrogatePK):
@@ -47,18 +47,6 @@ class User(Model, SurrogatePK):
     @property
     def college_initials(self):
         return self.college.initials
-
-    def update(self, old_password, new_password):
-        if not self.valid_password(old_password):
-            raise InvalidPassword
-
-        self.password = new_password
-
-    def delete(self, password):
-        if not self.valid_password(password):
-            raise InvalidPassword
-
-        super().delete()
 
     def __repr__(self):
         return f'<User {self.username}>'

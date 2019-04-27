@@ -2,7 +2,7 @@ from app.database.user import User
 from app.database.college import College
 
 from app.extensions import jwt
-from app.exceptions.users import UserNotFound
+from app.exceptions.models import ResourceNotFound
 
 
 @jwt.user_loader_callback_loader
@@ -17,4 +17,4 @@ def get_id_of_user(user: User):
 
 @jwt.user_loader_error_loader
 def id_erro(id):
-    return UserNotFound(description='could not find any user associated with the id', id=id)
+    return ResourceNotFound('logged in user')

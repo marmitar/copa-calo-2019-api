@@ -7,7 +7,7 @@ class Schema(marshmallow.Schema):
     __schema__ = 'schema'
 
     @post_dump
-    def dump_user(self, data):
+    def dump_schema(self, data):
         return {self.__schema__: data}
 
     def handle_error(self, error, data):
@@ -15,3 +15,6 @@ class Schema(marshmallow.Schema):
         field, messages = field_error
 
         raise InvalidParameter(parameter=field, description=messages[0])
+
+    class Meta:
+        strict = True
