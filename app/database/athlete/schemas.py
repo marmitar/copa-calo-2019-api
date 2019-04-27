@@ -17,6 +17,7 @@ class AthleteSchema(Schema):
     sex = EnumField(
         Sex,
         allow_none = False,
+        by_value = True,
     )
 
     extra = fields.Boolean(

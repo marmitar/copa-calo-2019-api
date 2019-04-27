@@ -18,7 +18,7 @@ from app.exceptions.models import InvalidPassword, AlreadyRegistered
 blueprint = Blueprint('users', __name__)
 
 
-@blueprint.route('/create', methods=['POST'])
+@blueprint.route('/create', methods=['PUT'])
 @use_kwargs(UserSchema)
 @marshal_with(UserSchema)
 @require_args
@@ -33,10 +33,10 @@ def create_user(username, password, college_initials, **_):
     return user
 
 
-@blueprint.route('/auth', methods=['GET', 'DELETE'])
+@blueprint.route('/auth', methods=['POST', 'DELETE'])
 @use_kwargs(UserSchema)
 def authenticate_user(username=None, password=None, **_):
-    if request.method == 'GET':
+    if request.method == 'POST':
         return login_user(username, password)
     elif request.method == 'DELETE':
         return logout_user()
@@ -94,7 +94,7 @@ def update_user(password=None, username=None, **_):
     return user
 
 
-@blueprint.route('/isfree', methods=['GET'])
+@blueprint.route('/free', methods=['GET'])
 @use_kwargs(UserSchema)
 @require_args
 def is_free(username, **_):

@@ -1,7 +1,58 @@
 import click
+import itertools as it
 from flask import current_app
 from flask.cli import with_appcontext
 from werkzeug.exceptions import MethodNotAllowed, NotFound
+
+
+defualt_methods = {'HEAD', 'OPTIONS'}
+
+
+def describe_url(url):
+    adapter = current_app.url_map.bind('localhost')
+    rule, arguments = adapter.match(url, return_rule=True)
+
+    endpoint = str(rule.endpoint)
+    methods = ', '.join(rule.methods - defualt_methods)
+    args = str(arguments)
+
+    return endpoint, methods, args
+
+
+def find_rules(order):
+    rules = current_app.url_map.iter_rules()
+    rules = sorted(rules, key=lambda rule: getattr(rule, order))
+
+    return map(format_rule, rules)
+
+
+def format_rule(rule):
+    path = str(rule.rule)
+    endpoint = str(rule.endpoint)
+    methods = ', '.join(rule.methods - defualt_methods)
+
+    return path, endpoint, methods
+
+
+def max_lengths(table):
+    def max_len(col):
+        return max(len(row[col]) for row in table)
+
+    cols = len(table[0])
+    return list(map(max_len, range(cols)))
+
+
+def formatted(rows, lengths):
+    def format(column, length):
+        return f'{column:{length}}'
+
+    def format_row(row):
+        return '  '.join(it.starmap(format, zip(row, lengths)))
+
+    if isinstance(rows, tuple):
+        return format_row(rows)
+
+    return map(format_row, rows)
 
 
 @click.command()
@@ -11,53 +62,20 @@ from werkzeug.exceptions import MethodNotAllowed, NotFound
               help='Property on Rule to order by (default: rule)')
 @with_appcontext
 def urls(url, order):
-    rows = []
-    column_headers = ('Rule', 'Endpoint', 'Arguments')
+    headers = ('Rule', 'Endpoint', 'Methods', 'Arguments')
 
     if url:
-        try:
-            rule, arguments = (
-                current_app.url_map.bind('localhost')
-                .match(url, return_rule=True))
-            rows.append((rule.rule, rule.endpoint, arguments))
-            column_length = 3
-        except (NotFound, MethodNotAllowed) as e:
-            rows.append(('<{}>'.format(e), None, None))
-            column_length = 1
+        headers = headers[1:]
+        rows = [describe_url(url)]
+
     else:
-        rules = sorted(
-            current_app.url_map.iter_rules(),
-            key=lambda rule: getattr(rule, order)
-        )
-        for rule in rules:
-            rows.append((rule.rule, rule.endpoint, None))
-        column_length = 2
+        headers = headers[:-1]
+        rows = list(find_rules(order))
 
-    str_template = ''
-    table_width = 0
+    lengths = max_lengths([headers] + rows)
 
-    if column_length >= 1:
-        max_rule_length = max(len(r[0]) for r in rows)
-        max_rule_length = max_rule_length if max_rule_length > 4 else 4
-        str_template += '{:' + str(max_rule_length) + '}'
-        table_width += max_rule_length
+    click.echo(formatted(headers, lengths))
+    click.echo('-' * len(formatted(headers, lengths)))
 
-    if column_length >= 2:
-        max_endpoint_length = max(len(str(r[1])) for r in rows)
-        max_endpoint_length = (
-            max_endpoint_length if max_endpoint_length > 8 else 8)
-        str_template += '  {:' + str(max_endpoint_length) + '}'
-        table_width += 2 + max_endpoint_length
-
-    if column_length >= 3:
-        max_arguments_length = max(len(str(r[2])) for r in rows)
-        max_arguments_length = (
-            max_arguments_length if max_arguments_length > 9 else 9)
-        str_template += '  {:' + str(max_arguments_length) + '}'
-        table_width += 2 + max_arguments_length
-
-    click.echo(str_template.format(*column_headers[:column_length]))
-    click.echo('-' * table_width)
-
-    for row in rows:
-        click.echo(str_template.format(*row[:column_length]))
+    for row in formatted(rows, lengths):
+        click.echo(row)

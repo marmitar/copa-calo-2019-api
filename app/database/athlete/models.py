@@ -1,4 +1,4 @@
-from enum import Enum, auto, unique
+from enum import Enum, unique
 
 from app.database import SurrogatePK, Model, Column, reference_col, db
 from app.database.fields import String, Boolean
@@ -8,8 +8,8 @@ from app.exceptions import protect_params
 
 @unique
 class Sex(Enum):
-    fem = auto()
-    masc = auto()
+    female = "feminino"
+    male = "masculino"
 
 
 class Athlete(Model, SurrogatePK):

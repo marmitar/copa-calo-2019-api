@@ -17,10 +17,6 @@ class Config(object):
     JWT_COOKIE_CSRF_PROTECT = False
 
     CORS_ORIGIN_WHITELIST = [
-        'http://0.0.0.0:8000',
-        'http://localhost:8000',
-        'http://0.0.0.0:4200',
-        'http://localhost:4200',
         'https://mpesportes.herokuapp.com',
     ]
 
@@ -33,6 +29,10 @@ class ProdConfig(Config):
 
     SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
     MIGRATIONS_DIR = 'migrations/production'
+
+    JWT_SESSION_COOKIE = False
+    JWT_COOKIE_SECURE = True
+    JWT_COOKIE_CSRF_PROTECT = True
 
 
 class DevConfig(Config):
@@ -48,6 +48,14 @@ class DevConfig(Config):
 
     CACHE_TYPE = 'simple'
     JWT_ACCESS_TOKEN_EXPIRES = dt.timedelta(10 ** 6)
+
+    CORS_ORIGIN_WHITELIST = [
+        'http://0.0.0.0:8000',
+        'http://localhost:8000',
+        'http://0.0.0.0:4200',
+        'http://localhost:4200',
+        'https://mpesportes.herokuapp.com',
+    ]
 
 
 class TestConfig(Config):

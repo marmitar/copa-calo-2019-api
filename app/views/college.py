@@ -3,7 +3,7 @@ from flask_apispec import use_kwargs, marshal_with
 from flask_jwt_extended import jwt_required, jwt_optional, current_user
 from sqlalchemy.exc import IntegrityError
 
-from app.exceptions import require_args
+from app.exceptions import require_args, MissingParameters
 from app.exceptions.models import ResourceNotFound, AlreadyRegistered
 from app.database.models import College, User
 from app.database.schemas import CollegeSchema
@@ -11,7 +11,7 @@ from app.database.schemas import CollegeSchema
 blueprint = Blueprint('college', __name__)
 
 
-@blueprint.route('/create', methods=['POST'])
+@blueprint.route('/create', methods=['PUT'])
 @use_kwargs(CollegeSchema)
 @marshal_with(CollegeSchema)
 @require_args
@@ -39,7 +39,7 @@ def get_college(name=None, initials=None, **_):
     elif initials:
         return College.get(initials=initials)
 
-    raise ResourceNotFound('College')
+    raise MissingParameters('name')
 
 
 @blueprint.route('/update', methods=['PATCH'])

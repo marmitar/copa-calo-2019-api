@@ -11,7 +11,7 @@ from app.database.schemas import AthleteSchema
 blueprint = Blueprint('athlete', __name__)
 
 
-@blueprint.route('/create', methods=['POST'])
+@blueprint.route('/create', methods=['PUT'])
 @jwt_required
 @use_kwargs(AthleteSchema)
 @marshal_with(AthleteSchema)
