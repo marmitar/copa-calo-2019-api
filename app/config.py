@@ -21,7 +21,7 @@ class Config(object):
         'http://localhost:8000',
         'http://0.0.0.0:4200',
         'http://localhost:4200',
-        'https://mpesportes',
+        'https://mpesportes.herokuapp.com',
     ]
 
 
