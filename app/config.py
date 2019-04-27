@@ -5,7 +5,7 @@ import datetime as dt
 class Config(object):
     """Base configuration"""
 
-    SECRET_KEY = os.environ['HASH_SECRET_KEY']
+    SECRET_KEY = os.environ['SECRET_KEY']
     APP_DIR = os.path.abspath(os.path.dirname(__file__))
     PROJECT_ROOT = os.path.abspath(os.path.join(APP_DIR, os.pardir))
 
