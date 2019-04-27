@@ -21,3 +21,7 @@ class SurrogatePK:
     @classmethod
     def check_by_key_value(cls, **kwargs):
         return db.session.query(cls.id).filter_by(**kwargs).scalar() is not None
+
+
+def reference_col(table, nullable=False, pk='id', **kwargs):
+    return Column(db.Integer, db.ForeignKey(f'{table.__tablename__}.{pk}'), nullable=nullable, **kwargs)

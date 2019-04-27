@@ -30,4 +30,12 @@ class Database(SQLAlchemy):
                 if commit:
                     self.session.commit()
 
+            @classmethod
+            def get(cls, unique=True, **kwargs):
+                result = cls.query.filter_by(**kwargs)
+                if unique:
+                    result = result.first()
+
+                return result
+
         super().__init__(model_class=CRUDModel)

@@ -1,3 +1,5 @@
+import functools
+
 from app.exceptions import JSONException
 
 
@@ -13,19 +15,20 @@ class ParameterNotModifiable(JSONException):
     code = 405
     description = 'Parameter not modifiable'
 
-    def __init__(self, **args):
+    def __init__(self, *args):
         super().__init__(parameters=list(args))
 
 
 class InvalidParameter(JSONException):
     code = 401
-    description = 'Invalid Parameter'
+    description = 'Request with an invalid parametr'
 
-    def __init__(self, parameter, value=None, error=None):
-        kwargs = {'parameter': parameter}
+    def __init__(self, parameter, value=None, description=None):
+        kwargs = {
+            'invalid_parameter': parameter,
+            'description': description
+        }
         if value:
-            kwargs['value'] = value
-        if error:
-            kwargs['error'] = error
+            kwargs['values'] = value
 
         super().__init__(**kwargs)

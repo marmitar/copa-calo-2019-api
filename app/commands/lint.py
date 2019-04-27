@@ -1,6 +1,5 @@
 import os
 from glob import glob
-from subprocess import call
 
 import click
 
@@ -17,12 +16,11 @@ def lint(fix_imports):
 
     def execute_tool(description, *args):
         """Execute a checking tool with its arguments."""
-        command_line = list(args) + files_and_directories
-        click.echo('{}: {}'.format(description, ' '.join(command_line)))
-        return_value = call(command_line)
+        command_args = list(args) + files_and_directories
+        command_line = ' '.join(command_args)
+        click.echo('{}: {}'.format(description, command_line))
+        return_value = os.system(command_line)  # noqa: S605
         if return_value != 0:
             exit(return_value)
 
-    if fix_imports:
-        execute_tool('Fixing import order', 'isort', '-rc')
-    execute_tool('Checking code style', 'flake8')
+    execute_tool('Checking code style', 'flake8', '--exit-zero')

@@ -1,7 +1,8 @@
 from app.database.user import User
+from app.database.college import College
 
 from app.extensions import jwt
-from app.database.user import UserNotFound
+from app.exceptions.users import UserNotFound
 
 
 @jwt.user_loader_callback_loader

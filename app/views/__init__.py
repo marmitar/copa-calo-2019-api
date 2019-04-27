@@ -1,5 +1,5 @@
 from flask import Flask
-from app.database.user import user_blueprint
+from app.views.user import blueprint as user_blueprint
 
 
 def register_blueprints(app: Flask):

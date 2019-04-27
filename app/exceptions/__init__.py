@@ -5,7 +5,7 @@ from app.exceptions.json_exception import JSONException
 from app.exceptions.server_error import InternalServerError
 from app.exceptions.parameters import MissingParameters, ParameterNotModifiable, InvalidParameter
 
-from app.exceptions.require_args import require_args
+from app.exceptions.decorators import require_args, protect_params
 
 
 def register_errorhandlers(app: Flask):

@@ -1,24 +1,25 @@
-from app.database import SurrogatePK, Model, Column
+from app.database import SurrogatePK, Model, Column, reference_col
 from app.database.fields import String, Binary
 from app.extensions import bcrypt
-from app.exceptions import ParameterNotModifiable
+from app.database.college import College
 
-from .exceptions import InvalidPassword
+from app.exceptions.users import InvalidPassword
 
 
 class User(Model, SurrogatePK):
     __tablename__ = 'users'
 
-    username = Column(String(32), unique=True, nullable=False)
-    email = Column(String(48), unique=True, nullable=False, index=True)
+    username = Column(String(32), unique=True, nullable=False, index=True)
     password_hash = Column(Binary(60), unique=True, nullable=False)
+
+    college_id = reference_col(College, nullable=False)
 
     access_token: str = None
     refresh_token: str = None
 
     # noqa: E303
-    def __init__(self, username, email, password):
-        Model.__init__(self, username=username, email=email, password=password)
+    def __init__(self, username, password, college):
+        Model.__init__(self, username=username, password=password, college=college)
         SurrogatePK.__init__(self)
 
         self.save()
@@ -35,14 +36,23 @@ class User(Model, SurrogatePK):
     def valid_password(self, password) -> bool:
         return bcrypt.check_password_hash(self.password_hash, password)
 
-    def update(self, old_password, **kwargs):
+    @property
+    def college(self):
+        return College.get_by_id(self.college_id)
+
+    @college.setter
+    def college(self, user_college: College):
+        self.college_id = user_college.id
+
+    @property
+    def college_initials(self):
+        return self.college.initials
+
+    def update(self, old_password, new_password):
         if not self.valid_password(old_password):
             raise InvalidPassword
 
-        elif 'username' in kwargs:
-            raise ParameterNotModifiable('username')
-
-        super().update(**kwargs)
+        self.password = new_password
 
     def delete(self, password):
         if not self.valid_password(password):

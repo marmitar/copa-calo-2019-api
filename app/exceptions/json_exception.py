@@ -41,7 +41,7 @@ class JSONException(HTTPException):
         return d
 
     def to_json(self):
-        return jsonify(error=self.to_dict())
+        return jsonify(self.to_dict())
 
     def __str__(self):
         if self.description:

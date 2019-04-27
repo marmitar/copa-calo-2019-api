@@ -2,7 +2,7 @@ from flask import Flask
 
 from app.config import ProdConfig
 from app.extensions import register_extensions
-from app.database.blueprints import register_blueprints
+from app.views import register_blueprints
 from app.exceptions import register_errorhandlers
 from app.extensions.shell import register_shellcontext
 from app.commands import register_commands
