@@ -9,7 +9,7 @@ class Config(object):
     APP_DIR = os.path.abspath(os.path.dirname(__file__))
     PROJECT_ROOT = os.path.abspath(os.path.join(APP_DIR, os.pardir))
 
-    MIGRATIONS_DIR = '.migrations'
+    MIGRATIONS_DIR = 'migrations'
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     BCRYPT_LOG_ROUNDS = 12
@@ -23,6 +23,7 @@ class Config(object):
         'http://localhost:8000',
         'http://0.0.0.0:4200',
         'http://localhost:4200',
+        'https://mpesportes',
     ]
 
 
@@ -41,7 +42,7 @@ class DevConfig(Config):
     ENV = 'dev'
     DEBUG = True
 
-    DB_NAME = '.dev.db'
+    DB_NAME = 'dev.db'
     DB_PATH = os.path.join(Config.PROJECT_ROOT, DB_NAME)
     SQLALCHEMY_DATABASE_URI = f'sqlite:///{DB_PATH}'
 
