@@ -12,7 +12,7 @@ class User(Model, SurrogatePK):
     username = Column(String(32), unique=True, nullable=False, index=True)
     password_hash = Column(Binary(60), unique=True, nullable=False)
 
-    college_id = reference_col(College, nullable=False)
+    college_id = reference_col(College)
 
     access_token: str = None
     refresh_token: str = None
@@ -37,7 +37,7 @@ class User(Model, SurrogatePK):
         return bcrypt.check_password_hash(self.password_hash, password)
 
     @property
-    def college(self):
+    def college(self) -> College:
         return College.get_by_id(self.college_id)
 
     @college.setter

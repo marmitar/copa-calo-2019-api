@@ -42,7 +42,7 @@ def get_college(name=None, initials=None, **_):
     raise ResourceNotFound('College')
 
 
-@blueprint.route('/update', methods=['POST'])
+@blueprint.route('/update', methods=['PATCH'])
 @jwt_required
 @use_kwargs(CollegeSchema)
 @marshal_with(CollegeSchema)

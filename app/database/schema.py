@@ -1,5 +1,6 @@
 import marshmallow
 from marshmallow import pre_load, pre_dump, post_load, post_dump, fields, validate
+from marshmallow_enum import EnumField
 from app.exceptions import InvalidParameter
 
 

@@ -11,3 +11,8 @@ class InternalServerError(JSONException):
         if error:
             kwargs['internalError'] = str(error)
         super().__init__(**kwargs)
+
+
+class ForbiddenAccess(JSONException):
+    code = 403
+    description = "You can't do that"

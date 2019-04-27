@@ -21,6 +21,7 @@ flask-migrate = "*"
 flask-jwt-extended = "*"
 marshmallow = "*"
 flask-apispec = "*"
+marshmallow-enum = "*"
 
 [requires]
 python_version = "3.7"

@@ -1,5 +1,6 @@
 from app.database.user import User
 from app.database.college import College
+from app.database.athlete import Athlete, Sex
 
 from app.extensions import jwt
 from app.exceptions.models import ResourceNotFound

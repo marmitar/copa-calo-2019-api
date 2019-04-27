@@ -5,7 +5,7 @@ from flask_jwt_extended import (
     create_access_token, set_access_cookies,
     create_refresh_token, set_refresh_cookies,
     jwt_required, jwt_optional, jwt_refresh_token_required,
-    current_user
+    current_user, unset_jwt_cookies
 )
 
 
@@ -33,10 +33,16 @@ def create_user(username, password, college_initials, **_):
     return user
 
 
-@blueprint.route('/auth', methods=['POST'])
+@blueprint.route('/auth', methods=['GET', 'DELETE'])
 @use_kwargs(UserSchema)
-@require_args
-def login_user(username, password, **_):
+def authenticate_user(username=None, password=None, **_):
+    if request.method == 'GET':
+        return login_user(username, password)
+    elif request.method == 'DELETE':
+        return logout_user()
+
+
+def login_user(username, password):
     user: User = User.get(username=username)
 
     if not user.valid_password(password):
@@ -45,14 +51,21 @@ def login_user(username, password, **_):
     user.access_token = create_access_token(user)
     user.refresh_token = create_refresh_token(user)
 
-    response = jsonify(UserSchema().dump(user))
+    data = UserSchema().dump(user).data
+    response = jsonify(**data)
 
     set_access_cookies(response, user.access_token)
     set_refresh_cookies(response, user.refresh_token)
     return response
 
 
-@blueprint.route('/refresh', methods=['POST'])
+def logout_user():
+    response = jsonify(logout=True)
+    unset_jwt_cookies(response)
+    return response
+
+
+@blueprint.route('/refresh', methods=['GET'])
 @jwt_refresh_token_required
 def refresh_login():
     user: User = current_user
@@ -70,7 +83,7 @@ def show_user():
     return current_user
 
 
-@blueprint.route('/update', methods=['POST'])
+@blueprint.route('/update', methods=['PATCH'])
 @jwt_required
 @use_kwargs(UserSchema)
 @marshal_with(UserSchema)

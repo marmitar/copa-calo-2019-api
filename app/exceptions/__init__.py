@@ -2,7 +2,7 @@ from flask import Flask, jsonify
 from werkzeug.exceptions import HTTPException, default_exceptions
 
 from app.exceptions.json_exception import JSONException
-from app.exceptions.server_error import InternalServerError
+from app.exceptions.server_error import InternalServerError, ForbiddenAccess
 from app.exceptions.parameters import MissingParameters, ParameterNotModifiable, InvalidParameter
 
 from app.exceptions.decorators import require_args, protect_params

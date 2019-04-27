@@ -11,6 +11,7 @@ class College(Model, SurrogatePK):
     logo = Column(LargeBinary)
 
     users = relationship('User', backref='users')
+    athletes = relationship('Athlete', backref='athlete')
 
     # noqa: E303
     def __init__(self, name, initials, logo=None):
