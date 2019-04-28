@@ -35,3 +35,10 @@ class AthleteSchema(Schema):
         validate   = validate.Length(max=5),
         dump_only  = True
     )
+
+    registrations = fields.Nested(
+        'RegistrationSchema',
+        many       = True,
+        allow_none = False,
+        dump_only  = True
+    )

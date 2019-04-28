@@ -6,7 +6,7 @@ from sqlalchemy.exc import IntegrityError
 from app.exceptions import require_args, MissingParameters
 from app.exceptions.models import ResourceNotFound, AlreadyRegistered
 from app.database.models import College, User
-from app.database.schemas import CollegeSchema
+from app.database.schemas import CollegeSchema, AthleteSchema
 from .__helpers__ import Permision, permission_required
 
 blueprint = Blueprint('college', __name__)
@@ -52,6 +52,27 @@ def update_college(name=None, team=None, initials=None, **_):
     user: User = current_user
     user.college.update(name=name, team=team, initials=initials)
     return user.college
+
+
+@blueprint.route('/athletes', methods=['GET'])
+@jwt_optional
+@use_kwargs(CollegeSchema)
+@marshal_with(AthleteSchema(many=True))
+def get_athletes(name=None, team=None, initials=None, **_):
+    if name:
+        college = College.get(name=name)
+    elif team:
+        college = College.get(team=team)
+    elif initials:
+        college = College.get(initials=initials)
+    else:
+        user: User = current_user
+        if user and user.is_dm():
+            college = user.college
+        else:
+            raise MissingParameters('name', 'team', 'initials')
+
+    return college.athletes
 
 
 @blueprint.route('/all', methods=['GET'])

@@ -3,7 +3,7 @@ from flask_apispec import use_kwargs, marshal_with
 from flask_jwt_extended import jwt_required, jwt_optional, current_user
 from sqlalchemy.exc import IntegrityError
 
-from app.exceptions import require_args, ForbiddenAccess, MissingParameters
+from app.exceptions import require_args, ForbiddenAccess
 from app.exceptions.models import ResourceNotFound, AlreadyRegistered
 from app.database.models import Athlete, College, User
 from app.database.schemas import AthleteSchema
@@ -21,13 +21,11 @@ def create_athlete(name, rg, rg_orgao, sex, extra, college_initials=None):
     user: User = current_user
     if user.is_dm():
         college = user.college
-    elif not college_initials:
-        raise MissingParameters('college_initials')
     else:
-        college = College.get(initials=college_initials)
+        college = college.get(initials=college_initials)
 
     try:
-        athlete = Athlete(name, rg, rg_orgao, sex, college, extra)
+        athlete = Athlete(name, rg, rg_orgao, sex, extra, college)
     except IntegrityError:
         raise AlreadyRegistered('athlete')
 

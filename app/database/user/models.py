@@ -56,7 +56,8 @@ class User(Model, SurrogatePK):
 
     @property
     def college(self) -> College:
-        return College.get_by_id(self.college_id)
+        if self.college_id:
+            return College.get_by_id(self.college_id)
 
     @college.setter
     def college(self, user_college: College):
