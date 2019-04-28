@@ -20,7 +20,3 @@ class UserSchema(Schema):
         allow_none = False,
         load_only  = True
     )
-    new_password = fields.String(
-        allow_none = False,
-        load_only  = True
-    )

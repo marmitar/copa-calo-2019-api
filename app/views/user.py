@@ -60,7 +60,7 @@ def login_user(username, password):
 
 
 def logout_user():
-    response = jsonify(logout=True)
+    response = jsonify(True)
     unset_jwt_cookies(response)
     return response
 
@@ -71,7 +71,7 @@ def refresh_login():
     user: User = current_user
     user.access_token = create_access_token(user)
 
-    response = jsonify()
+    response = jsonify(True)
     set_access_cookies(response, user.access_token)
     return response
 
@@ -100,7 +100,4 @@ def update_user(password=None, username=None, **_):
 def is_free(username, **_):
     exists = User.check_by_key_value(username=username)
 
-    return {
-        'username': username,
-        'free': not exists
-    }
+    return not exists
