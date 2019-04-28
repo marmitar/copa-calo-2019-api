@@ -18,6 +18,7 @@ class Config(object):
 
     CORS_ORIGIN_WHITELIST = [
         'https://mpesportes.herokuapp.com',
+        'https://mpesportes.herokuapp.com/',
     ]
 
 
@@ -32,7 +33,6 @@ class ProdConfig(Config):
 
     JWT_SESSION_COOKIE = False
     JWT_COOKIE_SECURE = True
-    JWT_COOKIE_CSRF_PROTECT = True
 
 
 class DevConfig(Config):
