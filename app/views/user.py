@@ -37,6 +37,8 @@ def create_user(username, password, college_initials, **_):
 @use_kwargs(UserSchema)
 def authenticate_user(username=None, password=None, **_):
     if request.method == 'POST':
+        if not username or not password:
+            MissingParameters('username', 'password')
         return login_user(username, password)
     elif request.method == 'DELETE':
         return logout_user()

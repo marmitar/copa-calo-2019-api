@@ -1,9 +1,17 @@
-from app.database import SurrogatePK, Model, Column, reference_col
-from app.database.fields import String, Binary
+import enum
+from app.database import SurrogatePK, Model, Column, reference_col, db
+from app.database.fields import String, Binary, Enum
 from app.extensions import bcrypt
 from app.database.college import College
 
 from app.exceptions.models import InvalidPassword
+
+
+@enum.unique
+class Permision(enum.Enum):
+    admin = enum.auto()
+    dm = enum.auto()
+    arbiter = enum.auto()
 
 
 class User(Model, SurrogatePK):
@@ -13,13 +21,14 @@ class User(Model, SurrogatePK):
     password_hash = Column(Binary(60), unique=True, nullable=False)
 
     college_id = reference_col(College)
+    permission = Column(Enum(Permision), nullable=False, default=Permision.dm)
 
     access_token: str = None
     refresh_token: str = None
 
     # noqa: E303
-    def __init__(self, username, password, college):
-        Model.__init__(self, username=username, password=password, college=college)
+    def __init__(self, username, password, permission, college=None):
+        Model.__init__(self, username=username, password=password, permission=permission, college=college)
         SurrogatePK.__init__(self)
 
         self.save()
@@ -36,17 +45,28 @@ class User(Model, SurrogatePK):
     def valid_password(self, password) -> bool:
         return bcrypt.check_password_hash(self.password_hash, password)
 
+    def is_admin(self):
+        return self.permission == Permision.admin
+
+    def is_dm(self):
+        return self.permission == Permision.dm
+
+    def is_arbiter(self):
+        return self.permission == Permision.arbiter
+
     @property
     def college(self) -> College:
         return College.get_by_id(self.college_id)
 
     @college.setter
     def college(self, user_college: College):
-        self.college_id = user_college.id
+        if user_college:
+            self.college_id = user_college.id
 
     @property
     def college_initials(self):
-        return self.college.initials
+        if self.college_id:
+            return self.college.initials
 
     def __repr__(self):
         return f'<User {self.username}>'

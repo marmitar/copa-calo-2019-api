@@ -7,18 +7,22 @@ from app.exceptions import require_args, ForbiddenAccess
 from app.exceptions.models import ResourceNotFound, AlreadyRegistered
 from app.database.models import Athlete, College, User
 from app.database.schemas import AthleteSchema
+from .__helpers__ import Permision, permission_required
 
 blueprint = Blueprint('athlete', __name__)
 
 
 @blueprint.route('/create', methods=['PUT'])
-@jwt_required
+@permission_required(Permision.admin, Permision.dm)
 @use_kwargs(AthleteSchema)
 @marshal_with(AthleteSchema)
 @require_args
-def create_athlete(name, rg, rg_orgao, sex, extra):
+def create_athlete(name, rg, rg_orgao, sex, extra, college_initials=None):
     user: User = current_user
-    college = user.college
+    if user.is_dm():
+        college = user.college
+    else:
+        college = college.get(initials=college_initials)
 
     try:
         athlete = Athlete(name, rg, rg_orgao, sex, extra, college)
@@ -42,7 +46,7 @@ def get_athlete(name=None, rg=None, **_):
 
 
 @blueprint.route('/update', methods=['PATCH'])
-@jwt_required
+@permission_required(Permision.admin, Permision.dm)
 @use_kwargs(AthleteSchema)
 @marshal_with(AthleteSchema)
 def update_athlete(name=None, rg=None, extra=None, **_):
@@ -54,7 +58,7 @@ def update_athlete(name=None, rg=None, extra=None, **_):
         raise ResourceNotFound('athlete')
 
     user: User = current_user
-    if athlete not in user.college.athletes:
+    if not user.is_admin() and athlete not in user.college.athletes:
         raise ForbiddenAccess
 
     athlete.update(extra=extra)

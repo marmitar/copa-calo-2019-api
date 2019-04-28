@@ -1,4 +1,4 @@
-from app.database.user import User
+from app.database.user import User, Permision
 from app.database.college import College
 from app.database.athlete import Athlete
 from app.database.track import Track

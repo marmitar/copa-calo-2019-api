@@ -7,11 +7,13 @@ from app.exceptions import require_args, MissingParameters
 from app.exceptions.models import ResourceNotFound, AlreadyRegistered
 from app.database.models import College, User
 from app.database.schemas import CollegeSchema
+from .__helpers__ import Permision, permission_required
 
 blueprint = Blueprint('college', __name__)
 
 
 @blueprint.route('/create', methods=['PUT'])
+@permission_required(Permision.admin)
 @use_kwargs(CollegeSchema)
 @marshal_with(CollegeSchema)
 @require_args
@@ -29,15 +31,15 @@ def create_college(name, team, initials, **_):
 @use_kwargs(CollegeSchema)
 @marshal_with(CollegeSchema)
 def get_college(name=None, initials=None, **_):
-    user: User = current_user
-    if user:
-        return user.college
-
     if name:
         return College.get(name=name)
 
     elif initials:
         return College.get(initials=initials)
+
+    user: User = current_user
+    if user:
+        return user.college
 
     raise MissingParameters('name')
 
