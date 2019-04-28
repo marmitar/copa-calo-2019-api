@@ -9,3 +9,4 @@ Boolean = db.Boolean
 DateTime = db.DateTime
 LargeBinary = db.LargeBinary
 Enum = db.Enum
+Float = db.Float

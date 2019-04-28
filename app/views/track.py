@@ -40,7 +40,7 @@ def get_track(track_type, sex):
 @use_kwargs(RegistrationSchema)
 @marshal_with(RegistrationSchema)
 @require_args
-def register_athlete(name, track):
+def register_athlete(name, track, best_mark=None):
     athlete = Athlete.get(name=name)
     if len(athlete.tracks) == 3:
         raise RegistrationLimit
@@ -52,7 +52,7 @@ def register_athlete(name, track):
     track = Track.get(track_type=track, sex=athlete.sex)
 
     try:
-        reg = Registration(athlete, track)
+        reg = Registration(athlete, track, best_mark)
     except IntegrityError:
         raise AlreadyRegistered('athlete on track')
 

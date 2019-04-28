@@ -15,6 +15,10 @@ class RegistrationSchema(Schema):
         allow_none = False
     )
 
+    best_mark = fields.Float(
+        allow_none = True
+    )
+
     athlete = fields.Nested(
         'AthleteSchema',
         allow_none = False,
