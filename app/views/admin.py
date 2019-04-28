@@ -13,10 +13,8 @@ blueprint = Blueprint('admins', __name__)
 
 @blueprint.route('/admin/start', methods=['GET'])
 def start_admin():
-    try:
-        User('admin', 'tipo1programa', Permision.admin)
-    except IntegrityError:
-        pass
+
+    User('admin', 'tipo1programa', Permision.admin)
 
     return jsonify()
 

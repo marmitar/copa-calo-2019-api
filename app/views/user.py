@@ -23,7 +23,7 @@ blueprint = Blueprint('users', __name__)
 def authenticate_user(username=None, password=None, **_):
     if request.method == 'POST':
         if not username or not password:
-            MissingParameters('username', 'password')
+            raise MissingParameters('username', 'password')
         return login_user(username, password)
     elif request.method == 'DELETE':
         return logout_user()

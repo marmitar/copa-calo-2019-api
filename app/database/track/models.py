@@ -1,4 +1,4 @@
-from app.database import SurrogatePK, Model, Column, db
+from app.database import SurrogatePK, Model, Column, db, relationship
 from app.database.fields import Enum
 
 from app import tracks
@@ -10,6 +10,8 @@ class Track(Model, SurrogatePK):
 
     track_type = Column(Enum(TrackType), nullable=False)
     sex = Column(Enum(Sex), nullable=False)
+
+    registrations = relationship('Registration')
 
     __table_args__ = (db.UniqueConstraint('track_type', 'sex'),)
 

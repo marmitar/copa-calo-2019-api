@@ -20,7 +20,7 @@ class User(Model, SurrogatePK):
     username = Column(String(32), unique=True, nullable=False, index=True)
     password_hash = Column(Binary(60), unique=True, nullable=False)
 
-    college_id = reference_col(College)
+    college_id = reference_col(College, nullable=True)
     permission = Column(Enum(Permision), nullable=False, default=Permision.dm)
 
     access_token: str = None
