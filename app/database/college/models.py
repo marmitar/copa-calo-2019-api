@@ -7,15 +7,16 @@ class College(Model, SurrogatePK):
     __tablename__ = 'colleges'
 
     name = Column(String(64), unique=True, nullable=False)
-    initials = Column(String(5), unique=True, nullable=False, index=True)
+    team = Column(String(64), unique=True, nullable=False)
+    initials = Column(String(10), unique=True, nullable=False, index=True)
     logo = Column(LargeBinary)
 
     users = relationship('User', backref='users')
     athletes = relationship('Athlete', backref='athlete')
 
     # noqa: E303
-    def __init__(self, name, initials, logo=None):
-        Model.__init__(self, name=name, initials=initials, logo=logo)
+    def __init__(self, name, team, initials):
+        Model.__init__(self, name=name, team=team, initials=initials, logo=None)
         SurrogatePK.__init__(self)
 
         self.save()

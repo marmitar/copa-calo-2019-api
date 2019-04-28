@@ -15,9 +15,9 @@ blueprint = Blueprint('college', __name__)
 @use_kwargs(CollegeSchema)
 @marshal_with(CollegeSchema)
 @require_args
-def create_college(name, initials, **_):
+def create_college(name, team, initials, **_):
     try:
-        college = College(name, initials)
+        college = College(name, team, initials)
     except IntegrityError:
         raise AlreadyRegistered('college')
 
@@ -46,9 +46,9 @@ def get_college(name=None, initials=None, **_):
 @jwt_required
 @use_kwargs(CollegeSchema)
 @marshal_with(CollegeSchema)
-def update_college(name=None, initials=None, logo=None, **_):
+def update_college(name=None, team=None, initials=None, **_):
     user: User = current_user
-    user.college.update(name=name, initials=initials, logo=logo)
+    user.college.update(name=name, team=team, initials=initials)
     return user.college
 
 

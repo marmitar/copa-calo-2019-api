@@ -16,12 +16,12 @@ blueprint = Blueprint('athlete', __name__)
 @use_kwargs(AthleteSchema)
 @marshal_with(AthleteSchema)
 @require_args
-def create_athlete(name, rg, sex, extra):
+def create_athlete(name, rg, rg_orgao, sex, extra):
     user: User = current_user
     college = user.college
 
     try:
-        athlete = Athlete(name, rg, sex, extra, college)
+        athlete = Athlete(name, rg, rg_orgao, sex, extra, college)
     except IntegrityError:
         raise AlreadyRegistered('athlete')
 

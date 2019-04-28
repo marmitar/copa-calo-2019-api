@@ -1,2 +1,2 @@
-from .models import Athlete, Sex
+from .models import Athlete
 from .schemas import AthleteSchema

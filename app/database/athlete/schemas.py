@@ -1,5 +1,5 @@
 from app.database.schema import Schema, fields, validate, EnumField
-from app.database.athlete import Sex
+from app.tracks import Sex
 
 
 class AthleteSchema(Schema):
@@ -11,13 +11,18 @@ class AthleteSchema(Schema):
 
     rg = fields.String(
         allow_none = False,
-        validate   = validate.Length(max=16)
+        validate   = validate.Length(max=20)
+    )
+
+    rg_orgao = fields.String(
+        allow_none = False,
+        validate   = validate.Length(max=10)
     )
 
     sex = EnumField(
         Sex,
         allow_none = False,
-        by_value = True,
+        by_value   = True,
     )
 
     extra = fields.Boolean(
@@ -27,5 +32,6 @@ class AthleteSchema(Schema):
     college = fields.String(
         attribute  = 'college_initials',
         allow_none = False,
-        validate   = validate.Length(max=5)
+        validate   = validate.Length(max=5),
+        dump_only  = True
     )

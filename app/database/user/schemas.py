@@ -9,10 +9,11 @@ class UserSchema(Schema):
         allow_none = False,
         validate   = validate.Length(min=5, max=32)
     )
+
     college = fields.String(
         attribute  = 'college_initials',
         allow_none = False,
-        validate   = validate.Length(max=5),
+        validate   = validate.Length(max=10),
         load_only  = True
     )
 

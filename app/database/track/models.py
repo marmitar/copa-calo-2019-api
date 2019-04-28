@@ -1,0 +1,23 @@
+from app.database import SurrogatePK, Model, Column, db
+from app.database.fields import Enum
+
+from app.tracks import TrackType, Sex
+
+
+class Track(Model, SurrogatePK):
+    __tablename__ = 'tracks'
+
+    track_type = Column(Enum(TrackType), nullable=False)
+    sex = Column(Enum(Sex), nullable=False)
+
+    __table_args__ = (db.UniqueConstraint('track_type', 'sex'),)
+
+    # noqa: E303
+    def __init__(self, track_type, sex):
+        Model.__init__(self, track_type=track_type, sex=sex)
+        SurrogatePK.__init__(self)
+
+        self.save()
+
+    def __repr__(self):
+        return f'<Track {self.track_type}[{self.sex}]>'

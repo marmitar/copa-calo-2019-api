@@ -28,7 +28,7 @@ def create_user(username, password, college_initials, **_):
     try:
         user = User(username, password, college)
     except IntegrityError:
-        raise AlreadyRegistered('user')
+        raise AlreadyRegistered(username)
 
     return user
 

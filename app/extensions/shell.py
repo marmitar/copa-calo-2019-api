@@ -13,8 +13,7 @@ shell_context = {
 
     'User': models.User,
     'College': models.College,
-    'Athlete': models.Athlete,
-    'Sex': models.Sex
+    'Athlete': models.Athlete
 }
 
 
