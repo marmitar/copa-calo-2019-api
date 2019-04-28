@@ -30,6 +30,7 @@ def create_track(track_type, sex):
 @blueprint.route('/read', methods=['GET'])
 @use_kwargs(TrackSchema)
 @marshal_with(TrackSchema)
+@require_args
 def get_track(track_type, sex):
     return Track.get(track_type=track_type, sex=sex)
 
@@ -38,6 +39,7 @@ def get_track(track_type, sex):
 @permission_required(Permision.admin, Permision.dm)
 @use_kwargs(RegistrationSchema)
 @marshal_with(RegistrationSchema)
+@require_args
 def register_athlete(name, track):
     athlete = Athlete.get(name=name)
     if len(athlete.tracks) == 3:
@@ -65,5 +67,5 @@ def track_types():
 
 @blueprint.route('/all', methods=['GET'])
 @marshal_with(TrackSchema(many=True))
-def all_tracks(**_):
+def all_tracks():
     return Track.query.all()
