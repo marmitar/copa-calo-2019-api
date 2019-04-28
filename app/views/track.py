@@ -6,7 +6,8 @@ from sqlalchemy.exc import IntegrityError
 from app.exceptions import require_args, ForbiddenAccess
 from app.exceptions.models import ResourceNotFound, AlreadyRegistered, RegistrationLimit
 from app.database.models import Athlete, College, Track, Registration
-from app.database.schemas import TrackSchema, RegistrationSchema
+from app.database.schemas import TrackSchema, RegistrationSchema, TrackTypeSchema
+from app.tracks import TrackType
 from .__helpers__ import Permision, permission_required
 
 blueprint = Blueprint('track', __name__)
@@ -33,12 +34,12 @@ def get_track(track_type, sex):
     return Track.get(track_type=track_type, sex=sex)
 
 
-@blueprint.route('/register', methods=['PUT'])
+@blueprint.route('/register', methods=['POST'])
 @permission_required(Permision.admin, Permision.dm)
 @use_kwargs(RegistrationSchema)
 @marshal_with(RegistrationSchema)
-def register_athlete(athlete_rg, track):
-    athlete = Athlete.get(rg=athlete_rg)
+def register_athlete(name, track):
+    athlete = Athlete.get(name=name)
     if len(athlete.tracks) == 3:
         raise RegistrationLimit
 
@@ -54,6 +55,12 @@ def register_athlete(athlete_rg, track):
         raise AlreadyRegistered('athlete on track')
 
     return reg
+
+
+@blueprint.route('/types', methods=['GET'])
+@marshal_with(TrackTypeSchema(many=True))
+def track_types():
+    return TrackType
 
 
 @blueprint.route('/all', methods=['GET'])

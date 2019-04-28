@@ -32,10 +32,6 @@ class Registration(Model, SurrogatePK):
         self.athlete_id = new_athl.id
 
     @property
-    def athlete_rg(self, name):
-        return self.athlete.rg
-
-    @property
     def track(self) -> Track:
         return Track.get_by_id(self.track_id)
 

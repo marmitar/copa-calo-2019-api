@@ -5,7 +5,7 @@ from app.tracks import TrackType
 
 class RegistrationSchema(Schema):
 
-    athlete_rg = fields.String(
+    name = fields.String(
         allow_none = False,
         load_only  = True
     )
