@@ -1,6 +1,6 @@
 from flask_jwt_extended import current_user, jwt_required
 from app.exceptions import ForbiddenAccess
-from app.database.user import Permision
+from app.database.user import Permision, User
 from functools import wraps
 
 

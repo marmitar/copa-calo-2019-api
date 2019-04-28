@@ -18,21 +18,6 @@ from app.exceptions.models import InvalidPassword, AlreadyRegistered
 blueprint = Blueprint('users', __name__)
 
 
-@blueprint.route('/create', methods=['PUT'])
-@use_kwargs(UserSchema)
-@marshal_with(UserSchema)
-@require_args
-def create_user(username, password, college_initials, **_):
-    college = College.get(initials=college_initials)
-
-    try:
-        user = User(username, password, college)
-    except IntegrityError:
-        raise AlreadyRegistered(username)
-
-    return user
-
-
 @blueprint.route('/auth', methods=['POST', 'DELETE'])
 @use_kwargs(UserSchema)
 def authenticate_user(username=None, password=None, **_):

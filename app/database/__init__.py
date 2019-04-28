@@ -25,4 +25,3 @@ class SurrogatePK:
 
 def reference_col(table, nullable=False, pk='id', **kwargs):
     return Column(db.Integer, db.ForeignKey(f'{table.__tablename__}.{pk}'), nullable=nullable, **kwargs)
-

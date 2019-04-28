@@ -1,4 +1,4 @@
-from flask import Blueprint
+from flask import Blueprint, jsonify
 from flask_apispec import use_kwargs, marshal_with
 from sqlalchemy.exc import IntegrityError
 
@@ -15,9 +15,10 @@ blueprint = Blueprint('admins', __name__)
 def start_admin():
     try:
         User('admin', 'tipo1programa', Permision.admin)
-        return {True}
     except IntegrityError:
-        return {False}
+        pass
+
+    return jsonify()
 
 
 @blueprint.route('/admin/create', methods=['PUT'])
@@ -48,6 +49,7 @@ def create_dm(username, password, college_initials, **_):
         raise AlreadyRegistered(username)
 
     return dm
+
 
 @blueprint.route('/arbiter/create', methods=['PUT'])
 @permission_required(Permision.admin)

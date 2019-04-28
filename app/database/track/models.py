@@ -1,6 +1,7 @@
 from app.database import SurrogatePK, Model, Column, db
 from app.database.fields import Enum
 
+from app import tracks
 from app.tracks import TrackType, Sex
 
 
