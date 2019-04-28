@@ -14,3 +14,10 @@ class TrackSchema(Schema):
         allow_none = False,
         by_value   = True,
     )
+
+    athletes = fields.Nested(
+        'AthleteSchema',
+        many       = True,
+        allow_none = False,
+        dump_only  = True
+    )

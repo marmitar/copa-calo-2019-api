@@ -25,3 +25,8 @@ class ResourceNotFound(JSONException):
     def __init__(self, resource=None):
         kw = {'resource': resource} if resource else {}
         super().__init__(**kw)
+
+
+class RegistrationLimit(JSONException):
+    code = 409
+    description = 'Limit of registrations for this athlete'

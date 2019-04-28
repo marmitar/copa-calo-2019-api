@@ -36,8 +36,8 @@ class AthleteSchema(Schema):
         dump_only  = True
     )
 
-    registrations = fields.Nested(
-        'RegistrationSchema',
+    tracks = fields.Nested(
+        'TrackSchema',
         many       = True,
         allow_none = False,
         dump_only  = True

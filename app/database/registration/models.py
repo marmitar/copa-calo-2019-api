@@ -1,6 +1,6 @@
 from app.database import SurrogatePK, Model, Column, reference_col, db
 from app.database.fields import Enum
-from app.exceptions import protect_params
+from app.exceptions import protect_params, InvalidParameter
 
 from app.database.models import Athlete, Track
 
@@ -15,6 +15,9 @@ class Registration(Model, SurrogatePK):
 
     # noqa: E303
     def __init__(self, athlete, track):
+        if track.sex != athlete.sex:
+            raise InvalidParameter('sex')
+
         Model.__init__(self, athlete=athlete, track=track)
         SurrogatePK.__init__(self)
 

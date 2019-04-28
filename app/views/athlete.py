@@ -44,7 +44,7 @@ def get_athlete(name=None, rg=None, **_):
     elif rg:
         return Athlete.get(rg=rg)
 
-    raise ResourceNotFound('athlete')
+    raise MissingParameters('name', 'rg')
 
 
 @blueprint.route('/update', methods=['PATCH'])
@@ -60,7 +60,7 @@ def update_athlete(name=None, rg=None, extra=None, **_):
         raise ResourceNotFound('athlete')
 
     user: User = current_user
-    if not user.is_admin() and athlete not in user.college.athletes:
+    if not user.is_admin() and user.college != athlete.college:
         raise ForbiddenAccess
 
     athlete.update(extra=extra)

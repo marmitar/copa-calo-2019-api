@@ -4,69 +4,59 @@ from flask_jwt_extended import jwt_required, jwt_optional, current_user
 from sqlalchemy.exc import IntegrityError
 
 from app.exceptions import require_args, ForbiddenAccess
-from app.exceptions.models import ResourceNotFound, AlreadyRegistered
-from app.database.models import Athlete, College, User
-from app.database.schemas import AthleteSchema
+from app.exceptions.models import ResourceNotFound, AlreadyRegistered, RegistrationLimit
+from app.database.models import Athlete, College, Track, Registration
+from app.database.schemas import TrackSchema, RegistrationSchema
 from .__helpers__ import Permision, permission_required
 
-blueprint = Blueprint('athlete', __name__)
+blueprint = Blueprint('track', __name__)
 
 
 @blueprint.route('/create', methods=['PUT'])
-@permission_required(Permision.admin, Permision.dm)
-@use_kwargs(AthleteSchema)
-@marshal_with(AthleteSchema)
+@permission_required(Permision.admin)
+@use_kwargs(TrackSchema)
+@marshal_with(TrackSchema)
 @require_args
-def create_athlete(name, rg, rg_orgao, sex, extra, college_initials=None):
-    user: User = current_user
-    if user.is_dm():
-        college = user.college
-    else:
-        college = college.get(initials=college_initials)
-
+def create_track(track_type, sex):
     try:
-        athlete = Athlete(name, rg, rg_orgao, sex, extra, college)
+        track = Track(track_type, sex)
     except IntegrityError:
-        raise AlreadyRegistered('athlete')
+        raise AlreadyRegistered('track')
 
-    return athlete
+    return track
 
 
 @blueprint.route('/read', methods=['GET'])
-@use_kwargs(AthleteSchema)
-@marshal_with(AthleteSchema)
-def get_athlete(name=None, rg=None, **_):
-    if name:
-        return Athlete.get(name=name)
-
-    elif rg:
-        return Athlete.get(rg=rg)
-
-    raise ResourceNotFound('athlete')
+@use_kwargs(TrackSchema)
+@marshal_with(TrackSchema)
+def get_track(track_type, sex):
+    return Track.get(track_type=track_type, sex=sex)
 
 
-@blueprint.route('/update', methods=['PATCH'])
+@blueprint.route('/register', methods=['PUT'])
 @permission_required(Permision.admin, Permision.dm)
-@use_kwargs(AthleteSchema)
-@marshal_with(AthleteSchema)
-def update_athlete(name=None, rg=None, extra=None, **_):
-    if name:
-        athlete = Athlete.get(name=name)
-    elif rg:
-        athlete = Athlete.get(rg=rg)
-    else:
-        raise ResourceNotFound('athlete')
+@use_kwargs(RegistrationSchema)
+@marshal_with(RegistrationSchema)
+def register_athlete(athlete_rg, track):
+    athlete = Athlete.get(rg=athlete_rg)
+    if len(athlete.tracks) == 3:
+        raise RegistrationLimit
 
-    user: User = current_user
-    if not user.is_admin() and athlete not in user.college.athletes:
+    user = current_user
+    if not user.is_admin() and user.college != athlete.college:
         raise ForbiddenAccess
 
-    athlete.update(extra=extra)
+    track = Track.get(track_type=track, sex=athlete.sex)
 
-    return athlete
+    try:
+        reg = Registration(athlete, track)
+    except IntegrityError:
+        raise AlreadyRegistered('athlete on track')
+
+    return reg
 
 
 @blueprint.route('/all', methods=['GET'])
-@marshal_with(AthleteSchema(many=True))
-def all_athletes(**_):
-    return Athlete.query.all()
+@marshal_with(TrackSchema(many=True))
+def all_tracks(**_):
+    return Track.query.all()
