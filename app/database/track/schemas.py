@@ -4,8 +4,9 @@ from app.tracks import Sex, TrackType
 
 class TrackSchema(Schema):
 
-    track_type = EnumField(
+    trackType = EnumField(
         TrackType,
+        attribute  = 'track_type',
         allow_none = False
     )
 
@@ -16,8 +17,9 @@ class TrackSchema(Schema):
     )
 
     athletes = fields.Nested(
-        'AthleteSchema',
-        exclude    = ('tracks',),
+        'RegistrationSchema',
+        attribute  = 'registrations',
+        exclude    = ('track',),
         many       = True,
         allow_none = False,
         dump_only  = True

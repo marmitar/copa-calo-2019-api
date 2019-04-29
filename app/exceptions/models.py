@@ -30,3 +30,23 @@ class ResourceNotFound(JSONException):
 class RegistrationLimit(JSONException):
     code = 409
     description = 'Limit of registrations for this athlete'
+
+
+class UnathorizedAcces(JSONException):
+    code = 401
+    description = 'No authorization set for this resource'
+
+
+class ExpiredToken(JSONException):
+    code = 401
+    description = 'Token expired'
+
+
+class InvalidToken(JSONException):
+    code = 422
+    description = 'Token invalid'
+
+
+class RevokedToken(JSONException):
+    code = 401
+    description = 'Token revoked'

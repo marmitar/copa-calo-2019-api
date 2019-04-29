@@ -31,7 +31,7 @@ def create_track(track_type, sex):
 @use_kwargs(TrackSchema)
 @marshal_with(TrackSchema)
 @require_args
-def get_track(track_type, sex):
+def get_track(track_type, sex, **_):
     return Track.get(track_type=track_type, sex=sex)
 
 
@@ -40,7 +40,7 @@ def get_track(track_type, sex):
 @use_kwargs(RegistrationSchema)
 @marshal_with(RegistrationSchema)
 @require_args
-def register_athlete(name, track, best_mark=None):
+def register_athlete(name, track, best_mark=None, extra=None):
     athlete = Athlete.get(name=name)
     if len(athlete.tracks) == 3:
         raise RegistrationLimit
@@ -52,7 +52,7 @@ def register_athlete(name, track, best_mark=None):
     track = Track.get(track_type=track, sex=athlete.sex)
 
     try:
-        reg = Registration(athlete, track, best_mark)
+        reg = Registration(athlete, track, best_mark, extra)
     except IntegrityError:
         raise AlreadyRegistered('athlete on track')
 
@@ -66,6 +66,6 @@ def track_types():
 
 
 @blueprint.route('/all', methods=['GET'])
-@marshal_with(TrackSchema(many=True))
+@marshal_with(TrackSchema(many=True, exclude=('athletes',)))
 def all_tracks():
     return Track.query.all()

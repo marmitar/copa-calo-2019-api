@@ -12,7 +12,6 @@ class Athlete(Model, SurrogatePK):
     rg = Column(String(20), nullable=False, index=True)
     rg_orgao = Column(String(10), nullable=False)
     sex = Column(Enum(Sex), nullable=False)
-    extra = Column(Boolean, nullable=False, default=False)
 
     college_id = reference_col(College)
 
@@ -21,10 +20,8 @@ class Athlete(Model, SurrogatePK):
     __table_args__ = (db.UniqueConstraint('rg', 'rg_orgao'),)
 
     # noqa: E303
-    def __init__(self, name, rg, rg_orgao, sex, college, extra=None):
-        if not extra:
-            extra = False
-        Model.__init__(self, name=name, rg=rg, rg_orgao=rg_orgao, sex=sex, extra=extra, college=college)
+    def __init__(self, name, rg, rg_orgao, sex, college):
+        Model.__init__(self, name=name, rg=rg, rg_orgao=rg_orgao, sex=sex, college=college)
         SurrogatePK.__init__(self)
 
         self.save()

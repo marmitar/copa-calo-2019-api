@@ -14,7 +14,8 @@ class AthleteSchema(Schema):
         validate   = validate.Length(max=20)
     )
 
-    rg_orgao = fields.String(
+    rgOrgao = fields.String(
+        attribute  = 'rg_orgao',
         allow_none = False,
         validate   = validate.Length(max=10)
     )
@@ -25,19 +26,15 @@ class AthleteSchema(Schema):
         by_value   = True,
     )
 
-    extra = fields.Boolean(
-        allow_none = False
-    )
-
     college = fields.String(
         attribute  = 'college_initials',
-        allow_none = False,
-        validate   = validate.Length(max=5),
-        dump_only  = True
+        allow_none = True,
+        validate   = validate.Length(max=10)
     )
 
     tracks = fields.Nested(
-        'TrackSchema',
+        'RegistrationSchema',
+        attribute  = 'registrations',
         exclude    = ('athletes',),
         many       = True,
         allow_none = False,

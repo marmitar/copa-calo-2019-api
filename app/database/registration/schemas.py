@@ -15,12 +15,18 @@ class RegistrationSchema(Schema):
         allow_none = False
     )
 
-    best_mark = fields.Float(
+    extra = fields.Boolean(
+        allow_none = True
+    )
+
+    bestMark = fields.Float(
+        attribute  = 'best_mark',
         allow_none = True
     )
 
     athlete = fields.Nested(
         'AthleteSchema',
+        exclude = ('tracks',),
         allow_none = False,
         dump_only = True
     )

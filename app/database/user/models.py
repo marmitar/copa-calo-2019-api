@@ -23,8 +23,7 @@ class User(Model, SurrogatePK):
     college_id = reference_col(College, nullable=True)
     permission = Column(Enum(Permision), nullable=False, default=Permision.dm)
 
-    access_token: str = None
-    refresh_token: str = None
+    token: str = None
 
     # noqa: E303
     def __init__(self, username, password, permission, college=None):

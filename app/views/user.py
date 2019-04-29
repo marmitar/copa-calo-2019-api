@@ -3,9 +3,7 @@ from flask_apispec import use_kwargs, marshal_with
 from sqlalchemy.exc import IntegrityError
 from flask_jwt_extended import (
     create_access_token, set_access_cookies,
-    create_refresh_token, set_refresh_cookies,
-    jwt_required, jwt_optional, jwt_refresh_token_required,
-    current_user, unset_jwt_cookies
+    jwt_required, jwt_optional, current_user, get_raw_jwt
 )
 
 
@@ -14,11 +12,13 @@ from app.exceptions import MissingParameters, require_args
 from app.database.models import User, College
 from app.database.schemas import UserSchema
 from app.exceptions.models import InvalidPassword, AlreadyRegistered
+from app.views.__helpers__ import blacklist
 
 blueprint = Blueprint('users', __name__)
 
 
 @blueprint.route('/auth', methods=['POST', 'DELETE'])
+@jwt_optional
 @use_kwargs(UserSchema)
 def authenticate_user(username=None, password=None, **_):
     if request.method == 'POST':
@@ -35,32 +35,19 @@ def login_user(username, password):
     if not user.valid_password(password):
         raise InvalidPassword
 
-    user.access_token = create_access_token(user)
-    user.refresh_token = create_refresh_token(user)
+    user.token = create_access_token(user)
 
     data = UserSchema().dump(user).data
-    response = jsonify(**data)
-
-    set_access_cookies(response, user.access_token)
-    set_refresh_cookies(response, user.refresh_token)
-    return response
+    return jsonify(token=user.token, **data)
 
 
 def logout_user():
-    response = jsonify(True)
-    unset_jwt_cookies(response)
-    return response
-
-
-@blueprint.route('/refresh', methods=['GET'])
-@jwt_refresh_token_required
-def refresh_login():
     user: User = current_user
-    user.access_token = create_access_token(user)
+    if not user:
+        return jsonify(False)
 
-    response = jsonify(True)
-    set_access_cookies(response, user.access_token)
-    return response
+    blacklist(get_raw_jwt())
+    return jsonify(True)
 
 
 @blueprint.route('/read', methods=['GET'])

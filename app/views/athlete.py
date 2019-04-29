@@ -17,7 +17,7 @@ blueprint = Blueprint('athlete', __name__)
 @use_kwargs(AthleteSchema)
 @marshal_with(AthleteSchema)
 @require_args
-def create_athlete(name, rg, rg_orgao, sex, extra, college_initials=None):
+def create_athlete(name, rg, rg_orgao, sex, college_initials=None):
     user: User = current_user
     if user.is_dm():
         college = user.college
@@ -27,7 +27,7 @@ def create_athlete(name, rg, rg_orgao, sex, extra, college_initials=None):
         college = College.get(initials=college_initials)
 
     try:
-        athlete = Athlete(name, rg, rg_orgao, sex, college, extra)
+        athlete = Athlete(name, rg, rg_orgao, sex, college)
     except IntegrityError:
         raise AlreadyRegistered('athlete')
 
@@ -69,6 +69,6 @@ def update_athlete(name=None, rg=None, extra=None, **_):
 
 
 @blueprint.route('/all', methods=['GET'])
-@marshal_with(AthleteSchema(many=True))
+@marshal_with(AthleteSchema(many=True, exclude=('tracks',)))
 def all_athletes(**_):
     return Athlete.query.all()

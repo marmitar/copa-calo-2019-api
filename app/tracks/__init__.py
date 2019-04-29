@@ -8,8 +8,11 @@ class Sex(Enum):
     male = 'masculino'
 
 
-female = Sex.female
-male = Sex.male
+@unique
+class Status(Enum):
+    not_started = 'começar'
+    started = 'acontecendo'
+    ended = 'acabou'
 
 
 @unique

@@ -1,5 +1,5 @@
 from app.database import SurrogatePK, Model, Column, reference_col, db
-from app.database.fields import Enum, Float
+from app.database.fields import Enum, Float, Boolean
 from app.exceptions import protect_params, InvalidParameter
 
 from app.database.models import Athlete, Track
@@ -11,16 +11,19 @@ class Registration(Model, SurrogatePK):
     athlete_id = reference_col(Athlete, index=True)
     track_id = reference_col(Track, index=True)
 
+    extra = Column(Boolean, nullable=False, default=False)
     best_mark = Column(Float(), nullable=True)
 
     __table_args__ = (db.UniqueConstraint('athlete_id', 'track_id'),)
 
     # noqa: E303
-    def __init__(self, athlete, track, best_mark=None):
+    def __init__(self, athlete, track, best_mark=None, extra=None):
         if track.sex != athlete.sex:
             raise InvalidParameter('sex')
+        if not extra:
+            extra = False
 
-        Model.__init__(self, athlete=athlete, track=track, best_mark=best_mark)
+        Model.__init__(self, athlete=athlete, track=track, best_mark=best_mark, extra=extra)
         SurrogatePK.__init__(self)
 
         self.save()

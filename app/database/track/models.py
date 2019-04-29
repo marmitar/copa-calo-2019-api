@@ -1,5 +1,5 @@
 from app.database import SurrogatePK, Model, Column, db, relationship
-from app.database.fields import Enum
+from app.database.fields import Enum, DateTime, Boolean
 
 from app import tracks
 from app.tracks import TrackType, Sex

@@ -5,7 +5,9 @@ from app.database.track import Track
 from app.database.registration import Registration
 
 from app.extensions import jwt
-from app.exceptions.models import ResourceNotFound
+from app.exceptions.models import (
+    ResourceNotFound, UnathorizedAcces, InvalidToken, RevokedToken, ExpiredToken
+)
 
 
 @jwt.user_loader_callback_loader
@@ -21,3 +23,23 @@ def get_id_of_user(user: User):
 @jwt.user_loader_error_loader
 def id_erro(id):
     return ResourceNotFound('logged in user')
+
+
+@jwt.unauthorized_loader
+def unathorized(msg):
+    return UnathorizedAcces(reason=msg)
+
+
+@jwt.expired_token_loader
+def expired(data):
+    return ExpiredToken(**data)
+
+
+@jwt.invalid_token_loader
+def invalid(msg):
+    return InvalidToken(reason=msg)
+
+
+@jwt.revoked_token_loader
+def revoked():
+    return RevokedToken()
