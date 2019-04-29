@@ -1,4 +1,4 @@
-from app.database.schema import Schema, fields, validate, EnumField
+from app.database.schema import Schema, fields, validate, EnumField, pre_dump
 
 from app.tracks import TrackType
 
@@ -30,3 +30,16 @@ class RegistrationSchema(Schema):
         allow_none = False,
         dump_only = True
     )
+
+    @pre_dump
+    def get_track_type(self, reg):
+        class Result:
+            def __init__(self, registration):
+                self.regist = registration
+
+            def __getattr__(self, key):
+                if key != 'track':
+                    return getattr(self.regist, key)
+                return self.regist.track.track_type
+
+        return Result(reg)

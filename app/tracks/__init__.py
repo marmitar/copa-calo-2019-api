@@ -17,11 +17,11 @@ class Status(Enum):
 
 @unique
 class TrackType(Enum):
-    cem_m = Track('cem metros')
-    quatrocentos_m = Track('quatrocentos metros')
-    oitocentos_m = Track('oitocentos metros')
-    quatro_cem_m = Track('quatro por cem metros')
-    mil_quinhentos_m = Track('mil e quinhentos metros')
+    cem_m = Track('100 metros')
+    quatrocentos_m = Track('400 metros')
+    oitocentos_m = Track('800 metros')
+    quatro_cem_m = Track('4 x 100 metros')
+    mil_quinhentos_m = Track('1500 metros')
     salto_distancia = Track('salto em distância')
     salto_altura = Track('salto em altura')
     arremesso_peso = Track('arremesso de peso')

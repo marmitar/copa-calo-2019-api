@@ -6,6 +6,9 @@ from dataclasses import dataclass
 class Track:
     name: str
 
+    def __repr__(self):
+        return self.name
+
     @property
     def event(self):
         pass

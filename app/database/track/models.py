@@ -26,5 +26,9 @@ class Track(Model, SurrogatePK):
     def athletes(self):
         return list(map(lambda r: r.athlete, self.registrations))
 
+    @property
+    def name(self):
+        return str(self.track_type.value)
+
     def __repr__(self):
-        return f'<Track {self.track_type}[{self.sex}]>'
+        return f'<Track {self.name}[{self.sex}]>'
