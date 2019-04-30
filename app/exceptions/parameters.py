@@ -5,7 +5,7 @@ from app.exceptions import JSONException
 
 class MissingParameters(JSONException):
     code = 400
-    description = 'Request missing parameters'
+    description = 'Paramêtros em falta'
 
     def __init__(self, *args):
         super().__init__(missing=list(args))
@@ -13,7 +13,7 @@ class MissingParameters(JSONException):
 
 class ParameterNotModifiable(JSONException):
     code = 405
-    description = 'Parameter not modifiable'
+    description = 'Parâmetro não modificável'
 
     def __init__(self, *args):
         super().__init__(parameters=list(args))
@@ -21,7 +21,7 @@ class ParameterNotModifiable(JSONException):
 
 class InvalidParameter(JSONException):
     code = 401
-    description = 'Request with an invalid parametr'
+    description = 'Parâmetros inválidos'
 
     def __init__(self, parameter, value=None, description=None):
         kwargs = {

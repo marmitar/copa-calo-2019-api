@@ -25,8 +25,7 @@ class RegistrationSchema(Schema):
 
     trackName = fields.String(
         attribute  = 'track_name',
-        allow_none = False,
-        dump_only  = True,
+        allow_none = False
     )
 
     extra = fields.Boolean(

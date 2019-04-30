@@ -36,7 +36,7 @@ def get_track(track_type, sex, **_):
 
 
 @blueprint.route('/register', methods=['POST'])
-@permission_required(Permision.admin, Permision.dm)
+@permission_required(Permision.admin, Permision.dm, timed=True)
 @use_kwargs(RegistrationSchema)
 @marshal_with(RegistrationSchema)
 @require_args

@@ -20,7 +20,7 @@ class AlreadyRegistered(JSONException):
 
 class ResourceNotFound(JSONException):
     code = 404
-    description = 'Resource not found'
+    description = 'Recurso não encontrado'
 
     def __init__(self, resource=None):
         kw = {'resource': resource} if resource else {}
@@ -29,24 +29,28 @@ class ResourceNotFound(JSONException):
 
 class RegistrationLimit(JSONException):
     code = 409
-    description = 'Limit of registrations for this athlete'
+    description = 'Limite de inscrições para o atleta'
 
 
 class UnathorizedAcces(JSONException):
     code = 401
-    description = 'No authorization set for this resource'
+    description = 'Sem autorização para acessar esta recurso'
 
 
 class ExpiredToken(JSONException):
     code = 401
-    description = 'Token expired'
+    description = 'Token expirou'
 
 
 class InvalidToken(JSONException):
     code = 422
-    description = 'Token invalid'
+    description = 'Token inválido'
 
 
 class RevokedToken(JSONException):
     code = 401
     description = 'Token revoked'
+
+
+class EndOfRegistrationPeriod(UnathorizedAcces):
+    description = 'Acabou o período de inscrição'

@@ -5,15 +5,15 @@ from sqlalchemy.exc import IntegrityError
 
 from app.exceptions import require_args, ForbiddenAccess, MissingParameters
 from app.exceptions.models import ResourceNotFound, AlreadyRegistered
-from app.database.models import Athlete, College, User
-from app.database.schemas import AthleteSchema
+from app.database.models import Athlete, College, User, Registration
+from app.database.schemas import AthleteSchema, RegistrationSchema
 from .__helpers__ import Permision, permission_required
 
 blueprint = Blueprint('athlete', __name__)
 
 
 @blueprint.route('/create', methods=['PUT'])
-@permission_required(Permision.admin, Permision.dm)
+@permission_required(Permision.admin, Permision.dm, timed=True)
 @use_kwargs(AthleteSchema)
 @marshal_with(AthleteSchema)
 @require_args
@@ -47,23 +47,30 @@ def get_athlete(name=None, rg=None, **_):
     raise MissingParameters('name', 'rg')
 
 
-@blueprint.route('/update', methods=['PATCH'])
-@permission_required(Permision.admin, Permision.dm)
-@use_kwargs(AthleteSchema)
-@marshal_with(AthleteSchema)
-def update_athlete(name, rg, extra=None, **_):
-    if name:
-        athlete = Athlete.get(name=name, rg=rg)
-    else:
-        raise ResourceNotFound('athlete')
+@blueprint.route('/delete', methods=['POST'])
+@permission_required(Permision.admin, Permision.dm, timed=True)
+@use_kwargs(RegistrationSchema)
+def delete_athlete(athlete_name, athlete_rg, track_name=None, **_):
+    athlete = Athlete.get(name=athlete_name, rg=athlete_rg)
+    if not athlete:
+        raise ResourceNotFound('atleta')
 
     user: User = current_user
     if not user.is_admin() and user.college != athlete.college:
         raise ForbiddenAccess
 
-    athlete.update(extra=extra)
+    if not track_name:
+        for reg in athlete.registrations:
+            reg.delete()
+        athlete.delete()
+        return jsonify()
 
-    return athlete
+    for reg in athlete.registrations:
+        if reg.track_name == track_name:
+            reg.delete()
+            return jsonify()
+
+    return ResourceNotFound('registro do atleta na prova')
 
 
 @blueprint.route('/all', methods=['GET'])

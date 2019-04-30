@@ -22,7 +22,7 @@ def get_id_of_user(user: User):
 
 @jwt.user_loader_error_loader
 def id_erro(id):
-    return ResourceNotFound('logged in user')
+    return ResourceNotFound('Uuário não está loggado')
 
 
 @jwt.unauthorized_loader
