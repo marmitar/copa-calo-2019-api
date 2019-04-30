@@ -27,4 +27,4 @@ def is_blacklisted(token):
 
 
 def blacklist(token):
-    blacklisted_tokens.add(token['jwt'])
+    blacklisted_tokens.add(token['jti'])
