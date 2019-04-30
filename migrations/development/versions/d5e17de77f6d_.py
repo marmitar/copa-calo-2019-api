@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 01dfb93e0e91
+Revision ID: d5e17de77f6d
 Revises: 
-Create Date: 2019-04-29 04:07:17.805657
+Create Date: 2019-04-30 12:00:31.930591
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '01dfb93e0e91'
+revision = 'd5e17de77f6d'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -34,8 +34,6 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('track_type', sa.Enum('cem_m', 'quatrocentos_m', 'oitocentos_m', 'quatro_cem_m', 'mil_quinhentos_m', 'salto_distancia', 'salto_altura', 'arremesso_peso', name='tracktype'), nullable=False),
     sa.Column('sex', sa.Enum('female', 'male', name='sex'), nullable=False),
-    sa.Column('expected_time', sa.DateTime(), nullable=False),
-    sa.Column('status', sa.Enum('not_started', 'started', 'ended', name='status'), nullable=False),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('track_type', 'sex')
     )
@@ -46,7 +44,6 @@ def upgrade():
     sa.Column('rg', sa.String(length=20), nullable=False),
     sa.Column('rg_orgao', sa.String(length=10), nullable=False),
     sa.Column('sex', sa.Enum('female', 'male', name='sex'), nullable=False),
-    sa.Column('extra', sa.Boolean(), nullable=False),
     sa.Column('college_id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['college_id'], ['colleges.id'], ),
     sa.PrimaryKeyConstraint('id'),
@@ -70,6 +67,7 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('athlete_id', sa.Integer(), nullable=False),
     sa.Column('track_id', sa.Integer(), nullable=False),
+    sa.Column('extra', sa.Boolean(), nullable=False),
     sa.Column('best_mark', sa.Float(), nullable=True),
     sa.ForeignKeyConstraint(['athlete_id'], ['athletes.id'], ),
     sa.ForeignKeyConstraint(['track_id'], ['tracks.id'], ),
