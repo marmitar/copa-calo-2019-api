@@ -18,7 +18,7 @@ blueprint = Blueprint('track', __name__)
 @use_kwargs(TrackSchema)
 @marshal_with(TrackSchema)
 @require_args
-def create_track(track_type, sex):
+def create_track(track_type, sex, **_):
     try:
         track = Track(track_type, sex)
     except IntegrityError:
@@ -40,8 +40,8 @@ def get_track(track_type, sex, **_):
 @use_kwargs(RegistrationSchema)
 @marshal_with(RegistrationSchema)
 @require_args
-def register_athlete(name, track, best_mark=None, extra=None):
-    athlete = Athlete.get(name=name)
+def register_athlete(athlete_name, athlete_rg, track, best_mark=None, extra=None, **_):
+    athlete = Athlete.get(name=athlete_name, rg=athlete_rg)
     if len(athlete.tracks) == 3:
         raise RegistrationLimit
 
@@ -54,7 +54,7 @@ def register_athlete(name, track, best_mark=None, extra=None):
     try:
         reg = Registration(athlete, track, best_mark, extra)
     except IntegrityError:
-        raise AlreadyRegistered('athlete on track')
+        raise AlreadyRegistered('atleta na prova')
 
     return reg
 

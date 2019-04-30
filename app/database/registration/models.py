@@ -37,7 +37,7 @@ class Registration(Model, SurrogatePK):
         self.athlete_id = new_athl.id
 
     @property
-    def name(self):
+    def athelte_name(self):
         return self.athlete.name
 
     @property
@@ -47,6 +47,10 @@ class Registration(Model, SurrogatePK):
     @track.setter
     def track(self, new_track):
         self.track_id = new_track.id
+
+    @property
+    def track_name(self):
+        return self.track.name
 
     def __repr__(self):
         return f'<Registration of {self.athlete.name} on {self.track}>'

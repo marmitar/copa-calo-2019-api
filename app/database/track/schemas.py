@@ -7,7 +7,6 @@ class TrackSchema(Schema):
     trackType = EnumField(
         TrackType,
         attribute  = 'track_type',
-        load_only  = True,
         allow_none = False
     )
 

@@ -5,14 +5,28 @@ from app.tracks import TrackType
 
 class RegistrationSchema(Schema):
 
-    name = fields.String(
+    athleteName = fields.String(
+        attribute  = 'athlete_name',
+        allow_none = False,
+        load_only  = True
+    )
+
+    athleteRg = fields.String(
+        attribute  = 'athlete_rg',
         allow_none = False,
         load_only  = True
     )
 
     track = EnumField(
         TrackType,
-        allow_none = False
+        allow_none = False,
+        load_only  = True
+    )
+
+    trackName = fields.String(
+        attribute  = 'track_name',
+        allow_none = False,
+        dump_only  = True,
     )
 
     extra = fields.Boolean(

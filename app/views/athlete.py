@@ -51,11 +51,9 @@ def get_athlete(name=None, rg=None, **_):
 @permission_required(Permision.admin, Permision.dm)
 @use_kwargs(AthleteSchema)
 @marshal_with(AthleteSchema)
-def update_athlete(name=None, rg=None, extra=None, **_):
+def update_athlete(name, rg, extra=None, **_):
     if name:
-        athlete = Athlete.get(name=name)
-    elif rg:
-        athlete = Athlete.get(rg=rg)
+        athlete = Athlete.get(name=name, rg=rg)
     else:
         raise ResourceNotFound('athlete')
 
@@ -69,6 +67,6 @@ def update_athlete(name=None, rg=None, extra=None, **_):
 
 
 @blueprint.route('/all', methods=['GET'])
-@marshal_with(AthleteSchema(many=True, exclude=('tracks',)))
+@marshal_with(AthleteSchema(many=True))
 def all_athletes(**_):
     return Athlete.query.all()
