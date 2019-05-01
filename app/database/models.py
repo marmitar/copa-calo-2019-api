@@ -3,6 +3,7 @@ from app.database.college import College
 from app.database.athlete import Athlete
 from app.database.track import Track
 from app.database.registration import Registration
+from app.database.event import Event
 
 from app.extensions import jwt
 from app.exceptions.models import (

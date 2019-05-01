@@ -10,9 +10,9 @@ class Sex(Enum):
 
 @unique
 class Status(Enum):
-    not_started = 'começar'
-    started = 'acontecendo'
-    ended = 'acabou'
+    not_started = 'Ainda não começou'
+    started = 'Está Acontecendo'
+    ended = 'Já Acabou'
 
 
 @unique

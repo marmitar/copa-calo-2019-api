@@ -17,19 +17,7 @@ class Config(object):
     JWT_TOKEN_LOCATION = 'headers'
     JWT_ACCESS_TOKEN_EXPIRES = dt.timedelta(1)
 
-    CORS_ORIGIN_WHITELIST = [
-        'http://127.0.0.1:8000',
-        'http://localhost:8000',
-        'http://192.168.1.10:8000',
-        'http://127.0.0.1:4200',
-        'http://localhost:4200',
-        'http://192.168.1.10:4200',
-        'http://127.0.0.1:8080',
-        'http://localhost:8080',
-        'http://192.168.1.10:8080',
-        'https://mpesportes.herokuapp.com',
-        'https://mpesportes.herokuapp.com/',
-    ]
+    CORS_ORIGIN_WHITELIST = '*'
 
 
 class ProdConfig(Config):
