@@ -2,6 +2,7 @@ from app.database import SurrogatePK, Model, Column, db, relationship, reference
 from app.database.fields import DateTime, Boolean, String, Enum
 
 from app.database.models import Track
+from app.exceptions import InvalidParameter
 
 from app.tracks import Status
 
@@ -15,8 +16,8 @@ class Event(Model, SurrogatePK):
     status = Column(Enum(Status), nullable=False, default=Status.not_started)
     time = Column(DateTime, nullable=False)
 
-    # last_ev_id = reference_col(Event, nullable=True, unique=True)
-    # next_ev_id = reference_col(Event, nullable=True, unique=True)
+    last_ev_id = reference_col('Event', nullable=True, unique=True)
+    next_ev_id = reference_col('Event', nullable=True, unique=True)
 
     __table_args__ = (db.UniqueConstraint('track_id', 'name'),)
 
@@ -37,25 +38,38 @@ class Event(Model, SurrogatePK):
     def track(self, track):
         self.track_id = track.id
 
-    # @property
-    # def last_ev(self):
-    #     return Track.get_by_id(self.last_ev_id)
+    @property
+    def last_ev(self):
+        return Track.get_by_id(self.last_ev_id)
 
-    # @last_ev.setter
-    # def last_ev(self, last):
-    #     self.last_ev_id = last.id
+    @last_ev.setter
+    def last_ev(self, last):
+        if (last.time >= self.time):
+            raise InvalidParameter('evento anterior')
+        self.last_ev_id = last.id
 
-    # @property
-    # def next_ev(self):
-    #     return Track.get_by_id(self.next_ev_id)
-
-    # @last_ev.setter
-    # def next_ev(self, next_):
-    #     self.next_ev_id = next_.id
+        if (last.next_ev_id != self.id):
+            last.next_ev = self
 
     @property
-    def track_name(self):
-        return self.track.name
+    def last_ev_name(self):
+        if self.last_ev:
+            return self.last_ev.name
+
+    @property
+    def next_ev(self):
+        return Track.get_by_id(self.next_ev_id)
+
+    @next_ev.setter
+    def next_ev(self, next_):
+        self.next_ev_id = next_.id
+
+        if (next_.next_ev_id != self.id):
+            next_.next_ev = self
+
+    @property
+    def track_type(self):
+        return self.track.track_type
 
     def __repr__(self):
-        return f'<Event {self.name} of {self.track.track_type}>'
+        return f'<Event {self.name} of {self.track_type}>'

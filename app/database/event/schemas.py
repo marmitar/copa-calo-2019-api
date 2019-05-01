@@ -5,12 +5,11 @@ from app.tracks import Sex, Status
 class EventSchema(Schema):
 
     name = fields.String(
-        allow_none = False,
-        dump_only  = True,
+        allow_none = False
     )
 
-    trackName = fields.String(
-        attribute  = 'track_name',
+    trackType = fields.String(
+        attribute  = 'track_type',
         allow_none = False,
         load_only  = True
     )
@@ -27,11 +26,17 @@ class EventSchema(Schema):
 
     status = EnumField(
         Status,
+        dump_by    = EnumField.VALUE,
         allow_none = True
+    )
+
+    after = fields.String(
+        attribute  = 'last_ev_name',
+        allow_none = True,
     )
 
     track = fields.Nested(
         'TrackSchema',
-        exclude   = ('athletes',),
+        exclude   = ('athletes', 'events'),
         dump_only = True
     )

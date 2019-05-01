@@ -12,6 +12,7 @@ class Track(Model, SurrogatePK):
     sex = Column(Enum(Sex), nullable=False)
 
     registrations = relationship('Registration')
+    events = relationship('Event')
 
     __table_args__ = (db.UniqueConstraint('track_type', 'sex'),)
 

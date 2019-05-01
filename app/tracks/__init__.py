@@ -16,6 +16,13 @@ class Status(Enum):
 
 
 @unique
+class PositionStatus(Enum):
+    free = 'livre'
+    occupied = 'ocupada'
+    unusable = 'inutilizável'
+
+
+@unique
 class TrackType(Enum):
     cem_m = Track('100 metros')
     quatrocentos_m = Track('400 metros')

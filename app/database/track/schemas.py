@@ -30,6 +30,14 @@ class TrackSchema(Schema):
         dump_only  = True
     )
 
+    events = fields.Nested(
+        'EventSchema',
+        exclude    = ('track',),
+        many       = True,
+        allow_none = False,
+        dump_only  = True
+    )
+
 
 class TrackTypeSchema(Schema):
     track_type = EnumField(
