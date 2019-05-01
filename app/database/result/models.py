@@ -1,34 +1,59 @@
-from app.database import SurrogatePK, Model, Column, db, relationship
-from app.database.fields import Enum, DateTime, Boolean
+from app.database import SurrogatePK, Model, Column, db, reference_col, relationship
+from app.database.fields import Enum, DateTime, Boolean, Integer, Text
 
 from app import tracks
-from app.tracks import TrackType, Sex
+from app.database.models import Event, Athlete
+from app.exceptions.models import InvalidResource
 
 
-class Track(Model, SurrogatePK):
-    __tablename__ = 'tracks'
+class Result(Model, SurrogatePK):
+    __tablename__ = 'results'
 
-    track_type = Column(Enum(TrackType), nullable=False)
-    sex = Column(Enum(Sex), nullable=False)
+    event_id = reference_col(Event, index=True)
+    athlete_id = reference_col(Athlete, index=True)
 
-    registrations = relationship('Registration')
+    value = Column(Integer, nullable=True)
+    removed = Column(Boolean, nullable=False, default=False)
+    reason = Column(Text, nullable=True)
 
-    __table_args__ = (db.UniqueConstraint('track_type', 'sex'),)
+    results = relationship('Result')
+
+    __table_args__ = (db.UniqueConstraint('event_id', 'athlete_id'),)
 
     # noqa: E303
-    def __init__(self, track_type, sex):
-        Model.__init__(self, track_type=track_type, sex=sex)
+    def __init__(self, event, athlete, value=None, removed=None, reason=None):
+        if not removed:
+            removed = False
+        else:
+            value = None
+
+        if event.track not in athlete.tracks:
+            raise InvalidResource('atleta não está inscrito nesta prova')
+
+        Model.__init__(self, event=event, athlete=athlete, value=value, remove=removed, reason=reason)
         SurrogatePK.__init__(self)
 
         self.save()
 
     @property
-    def athletes(self):
-        return list(map(lambda r: r.athlete, self.registrations))
+    def event(self):
+        return Event.get_by_id(self.event_id)
+
+    @event.setter
+    def event(self, other):
+        self.event_id = other.id
 
     @property
-    def name(self):
-        return str(self.track_type.value)
+    def athlete(self):
+        return Athlete.get_by_id(self.athlete_id)
+
+    @athlete.setter
+    def athlete(self, other):
+        self.athlete_id = other.id
+
+    @property
+    def track(self):
+        return self.event.track
 
     def __repr__(self):
-        return f'<Track {self.name}[{self.sex}]>'
+        return f'<Result {self.athlete.name} on {self.event.track_type}>'

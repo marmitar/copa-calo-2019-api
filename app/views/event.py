@@ -6,8 +6,8 @@ from sqlalchemy.exc import IntegrityError
 from app.exceptions import require_args, ForbiddenAccess
 from app.exceptions.models import ResourceNotFound, AlreadyRegistered, RegistrationLimit
 from app.database.models import Event, Track
-from app.database.schemas import EventSchema
-from app.tracks import TrackType
+from app.database.schemas import EventSchema, ResultSchema, AthleteSchema
+from app.tracks import Status
 from .__helpers__ import Permision, permission_required
 
 blueprint = Blueprint('event', __name__)
@@ -48,6 +48,7 @@ def get_event(**kwargs):
 @blueprint.route('/status', methods=['PATCH'])
 @permission_required(Permision.admin, Permision.arbiter)
 @use_kwargs(EventSchema)
+@require_args
 def change_status(name, track_type, sex, status, **_):
     track = Track.get(track_type=track_type, sex=sex)
     if not track:
@@ -59,6 +60,43 @@ def change_status(name, track_type, sex, status, **_):
 
     event.update(status=status)
     return jsonify()
+
+
+@blueprint.route('/results', methods=['GET'])
+@use_kwargs(EventSchema)
+@marshal_with(ResultSchema(many=True, exclude=('track',)))
+@require_args
+def fetch_results(name, track_type, sex, **_):
+    track = Track.get(track_type=track_type, sex=sex)
+    if not track:
+        raise ResourceNotFound('prova')
+
+    event = Event.get(track_id=track.id, name=name)
+    if not event:
+        raise ResourceNotFound('evento')
+
+    return event.results
+
+
+@blueprint.route('/positions', methods=['GET'])
+@use_kwargs(EventSchema)
+@marshal_with(AthleteSchema(many=True, exclude=('tracks',)))
+@require_args
+def positions(name, track_type, sex, **_):
+    track = Track.get(track_type=track_type, sex=sex)
+    if not track:
+        raise ResourceNotFound('prova')
+
+    event = Event.get(track_id=track.id, name=name)
+    if not event:
+        raise ResourceNotFound('evento')
+
+    if event.last_ev and event.last_ev.status != Status.ended:
+        raise
+
+    # TODO: ordenar atletas
+
+    return track.athletes
 
 
 @blueprint.route('/all', methods=['GET'])

@@ -16,8 +16,10 @@ class Event(Model, SurrogatePK):
     status = Column(Enum(Status), nullable=False, default=Status.not_started)
     time = Column(DateTime, nullable=False)
 
-    last_ev_id = reference_col('Event', nullable=True, unique=True)
-    next_ev_id = reference_col('Event', nullable=True, unique=True)
+    last_ev_id = reference_col('events', nullable=True, unique=True)
+    next_ev_id = reference_col('events', nullable=True, unique=True)
+
+    results = relationship('Event')
 
     __table_args__ = (db.UniqueConstraint('track_id', 'name'),)
 

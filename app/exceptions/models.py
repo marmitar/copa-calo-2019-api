@@ -54,3 +54,11 @@ class RevokedToken(JSONException):
 
 class EndOfRegistrationPeriod(UnathorizedAcces):
     description = 'Acabou o período de inscrição'
+
+
+class InvalidResource(AlreadyRegistered):
+    description = 'Recursos não têm registros válidos'
+
+
+class TrackIncomplete(RegistrationLimit):
+    desription = 'Evento anterior incompleto'

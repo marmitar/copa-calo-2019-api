@@ -42,14 +42,23 @@ def get_track(track_type, sex, **_):
 @require_args
 def register_athlete(athlete_name, athlete_rg, track, best_mark=None, extra=None, **_):
     athlete = Athlete.get(name=athlete_name, rg=athlete_rg)
-    if len(athlete.tracks) == 3:
+    if len(athlete.tracks) >= 3:
         raise RegistrationLimit
 
     user = current_user
     if not user.is_admin() and user.college != athlete.college:
         raise ForbiddenAccess
 
+    colleagues = []
+
     track = Track.get(track_type=track, sex=athlete.sex)
+    for reg in track.registrations:
+        if reg.athlete.college == athlete.college:
+            if reg.extra == extra:
+                colleagues.append(reg.athlete)
+
+    if extra and len(colleagues) >= 2 or not extra and len(colleagues) >= 2:
+        raise RegistrationLimit
 
     try:
         reg = Registration(athlete, track, best_mark, extra)

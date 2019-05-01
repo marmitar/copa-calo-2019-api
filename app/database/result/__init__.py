@@ -1,2 +1,2 @@
-from .models import Track
-from .schemas import TrackSchema, TrackTypeSchema
+from .models import Result
+from .schemas import ResultSchema

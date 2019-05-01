@@ -16,6 +16,7 @@ class Athlete(Model, SurrogatePK):
     college_id = reference_col(College)
 
     registrations = relationship('Registration')
+    results = relationship('Result')
 
     __table_args__ = (db.UniqueConstraint('rg', 'rg_orgao'),)
 

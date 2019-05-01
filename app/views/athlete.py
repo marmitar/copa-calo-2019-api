@@ -6,7 +6,7 @@ from sqlalchemy.exc import IntegrityError
 from app.exceptions import require_args, ForbiddenAccess, MissingParameters
 from app.exceptions.models import ResourceNotFound, AlreadyRegistered
 from app.database.models import Athlete, College, User, Registration
-from app.database.schemas import AthleteSchema, RegistrationSchema
+from app.database.schemas import AthleteSchema, RegistrationSchema, ResultSchema
 from .__helpers__ import Permision, permission_required
 
 blueprint = Blueprint('athlete', __name__)
@@ -77,3 +77,14 @@ def delete_athlete(athlete_name, athlete_rg, track_name=None, **_):
 @marshal_with(AthleteSchema(many=True))
 def all_athletes(**_):
     return Athlete.query.all()
+
+
+@blueprint.route('/results', methods=['GET'])
+@use_kwargs(AthleteSchema)
+@marshal_with(ResultSchema(many=True, exclude=('athlete',)))
+def get_results(name, rg, **_):
+    athlete = Athlete.get(name=name, rg=rg)
+    if not athlete:
+        raise ResourceNotFound('atleta')
+
+    raise athlete.results
